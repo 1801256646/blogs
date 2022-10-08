@@ -1,0 +1,23 @@
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Review } from '@/basic/review/entity/review.entity';
+
+@Entity()
+export class Reply {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  username: string;
+
+  @Column({ comment: '评论' })
+  text: string;
+
+  @Column({ name: 'create_time' })
+  createTime: Date;
+
+  @Column({ comment: '回复人', nullable: true })
+  replier: string;
+
+  @ManyToOne(() => Review, (entity) => entity.childReview)
+  childReview: Review;
+}
