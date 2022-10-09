@@ -3,5 +3,5 @@ export interface CreateUser {
 
   password: string;
 
-  mobliePhone: string;
+  cname: string;
 }

@@ -5,12 +5,15 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 10 })
+  @Column({ length: 16 })
   username: string;
 
   @Column({ length: 16 })
   password: string;
 
-  @Column({ length: 11 })
-  mobliePhone: string;
+  @Column({ length: 16 })
+  cname: string;
+
+  @Column({ name: 'create-time' })
+  createTime: Date;
 }

@@ -43,7 +43,10 @@ export class UserService {
     if (entity) {
       return resultCode({ message: '用户名已存在', code: Code.API_ERROR });
     }
-    const list = await this.userRepository.insert(user);
+    const list = await this.userRepository.insert({
+      ...user,
+      createTime: new Date(),
+    });
     if (list) {
       return resultCode();
     }
