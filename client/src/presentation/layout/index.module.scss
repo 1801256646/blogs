@@ -1,0 +1,40 @@
+.layout {
+    height: 100%;
+
+    .header {
+        width: 1300px;
+        height: 70px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+
+        .logo {
+            width: 51px;
+        }
+
+        .release {
+            width: 120px;
+            border-radius: 7px;
+        }
+
+        .login {
+            border-radius: 7px;
+        }
+    }
+
+    :global {
+        .ant-layout-header {
+            background-color: #fff;
+            padding: 0;
+        
+            
+        }
+    
+        .ant-layout-footer {
+            background-color: #252525;
+            color: #fff;
+            font-size: 30px;
+            text-align: center;
+        }
+    }
+}

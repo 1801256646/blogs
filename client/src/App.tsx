@@ -3,7 +3,7 @@ import { Route, Router, Switch } from 'react-router-dom';
 import { getHistory } from './application/history';
 import Layout from './presentation/layout';
 import { router } from './router';
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.min.css';
 
 const App = () => (
     <Router history={getHistory()}>

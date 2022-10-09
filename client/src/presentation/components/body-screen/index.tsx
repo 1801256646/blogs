@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
-import './index.scss';
+import styles from './index.module.scss';
 
 export interface BodyScreenProps {
     className?: string;
@@ -12,7 +12,7 @@ const BodyScreen: FC<BodyScreenProps> = (props) => {
     const { className, children, ...rest } = props;
 
     return (
-        <div {...rest} className={classnames(className, 'body')}>
+        <div {...rest} className={classnames(className, styles.body)}>
             {children}
         </div>
     );
