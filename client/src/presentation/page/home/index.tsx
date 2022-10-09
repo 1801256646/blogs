@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import BodyScreen from '../../components/body-screen';
+import BodyScreen from '@/presentation/components/body-screen';
 
 const Home: FC = () => {
 

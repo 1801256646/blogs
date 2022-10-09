@@ -1,7 +1,7 @@
 import { RouteConfig } from 'react-router-config'
-import Home from '../presentation/page/home';
-import Login from '../presentation/page/login';
-import Register from '../presentation/page/register';
+import Home from '@/presentation/page/home';
+import Login from '@/presentation/page/login';
+import Register from '@/presentation/page/register';
 
 export const router: RouteConfig[] = [
     {
