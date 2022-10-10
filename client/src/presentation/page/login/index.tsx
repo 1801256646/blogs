@@ -16,6 +16,7 @@ const Login: FC = () => {
             manual: true,
             onSuccess: (data) => {
                 if (data?.code === 0) {
+                    message.success('登陆成功!');
                     setTimeout(() => {
                         history.push('/');
                     }, 1000);
@@ -35,7 +36,6 @@ const Login: FC = () => {
             password,
         });
     };
-    console.log(styles);
 
     return (
         <Card title='登陆' className={styles.loginCard}>

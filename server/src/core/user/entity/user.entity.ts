@@ -14,6 +14,6 @@ export class User {
   @Column({ length: 16 })
   cname: string;
 
-  @Column({ name: 'create-time' })
+  @Column({ name: 'create_time', nullable: true })
   createTime: Date;
 }

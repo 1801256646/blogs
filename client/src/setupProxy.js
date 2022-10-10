@@ -9,7 +9,6 @@ module.exports = function (app) {
             },
             changeOrigin: true,
             secure: false, // 是否验证证书
-            ws: true, // 启用websocket
         }
     ));
 };

@@ -1,11 +1,10 @@
 import { NestFactory } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
-import { global } from './config';
-
-const { common } = global();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(common.port, common.ip);
+  const config = app.get(ConfigService);
+  await app.listen(config.get('global.port'), config.get('global.ip'));
 }
 bootstrap();

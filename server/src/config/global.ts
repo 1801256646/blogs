@@ -1,8 +1,7 @@
 const { HOST, PORT } = process.env;
+import { registerAs } from '@nestjs/config';
 
-export default () => ({
-  common: {
-    ip: HOST || '127.0.0.1',
-    port: PORT || 8080,
-  },
-});
+export default registerAs('global', () => ({
+  ip: HOST,
+  port: PORT,
+}));

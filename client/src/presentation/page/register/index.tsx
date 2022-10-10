@@ -9,8 +9,21 @@ import styles from './index.module.scss';
 const Register: FC = () => {
     const history = useHistory();
 
-    const { loading, run } = useRequest(RegisterUser, {
+    const { loading, run, error } = useRequest(RegisterUser, {
         manual: true,
+        onSuccess: (data) => {
+            if (data?.code === 0) {
+                message.success('注册成功！');
+                setTimeout(() => {
+                    history.push('/login');
+                }, 1000);
+            } else {
+                message.error(error?.message);
+            } 
+        },
+        onError: (error) => {
+            message.error(error?.message);
+        },
     })
     const handleFinish = (value: Record<string, string>) => {
         const { username, cname, password, confirmPassword } = value;
