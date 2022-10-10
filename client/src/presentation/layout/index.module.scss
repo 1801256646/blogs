@@ -20,14 +20,18 @@
         .login {
             border-radius: 7px;
         }
+
+        .avatar {
+            cursor: pointer;
+            background-color: #1890ff;
+        }
     }
 
     :global {
         .ant-layout-header {
             background-color: #fff;
             padding: 0;
-        
-            
+            height: 70px;
         }
     
         .ant-layout-footer {

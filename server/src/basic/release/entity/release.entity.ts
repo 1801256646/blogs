@@ -15,7 +15,7 @@ export class Release {
   @Column({ comment: '发布标题' })
   title: string;
 
-  @Column({ comment: '发布简介' })
+  @Column({ comment: '发布简介', nullable: true })
   description: string;
 
   @Column({ nullable: true, comment: '发布图片' })

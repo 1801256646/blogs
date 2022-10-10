@@ -17,6 +17,9 @@ const Login: FC = () => {
             onSuccess: (data) => {
                 if (data?.code === 0) {
                     message.success('登陆成功!');
+                    const value = form.getFieldsValue();
+                    localStorage.setItem('username', value.username);
+                    localStorage.setItem('password', value.password);
                     setTimeout(() => {
                         history.push('/');
                     }, 1000);
