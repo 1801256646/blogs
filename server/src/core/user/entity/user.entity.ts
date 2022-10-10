@@ -16,4 +16,10 @@ export class User {
 
   @Column({ name: 'create_time', nullable: true })
   createTime: Date;
+
+  @Column({ type: 'simple-array', nullable: true })
+  focus: number[];
+
+  @Column({ type: 'simple-array', nullable: true, comment: '收藏' })
+  collection: number[];
 }

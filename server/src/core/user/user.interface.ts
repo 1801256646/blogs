@@ -5,3 +5,9 @@ export interface CreateUser {
 
   cname: string;
 }
+
+export interface UpdateDto extends Partial<CreateUser> {
+  focus?: number[];
+
+  collection?: number[];
+}

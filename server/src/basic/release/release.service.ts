@@ -57,6 +57,8 @@ export class ReleaseService extends TypeormHelperService<Release> {
       updateTime: new Date(),
       status: ReleaseStatus.UnApproval,
       owner: approverEntity.owner,
+      focus: 0,
+      browse: 0,
     });
     return resultCode();
   }
@@ -90,7 +92,7 @@ export class ReleaseService extends TypeormHelperService<Release> {
 
   async update(id: number, updateDto: UpdateDto) {
     const { data: entity } = await this.findOne(id);
-    const updateEntity = await this.releaseRepository.merge(entity, updateDto);
+    const updateEntity = this.releaseRepository.merge(entity, updateDto);
     return this.releaseRepository.save(updateEntity);
   }
 }

@@ -25,4 +25,8 @@ export interface UpdateDto {
   status?: ReleaseStatus;
 
   review?: Review[];
+
+  focus?: number;
+
+  browse?: number;
 }

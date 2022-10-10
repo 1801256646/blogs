@@ -7,7 +7,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { Reply } from '@/basic/reply/entity/reply.entity';
-import { Release } from '@/business/release/entity/release.entity';
+import { Release } from '@/basic/release/entity/release.entity';
 
 @Entity()
 export class Review {

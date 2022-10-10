@@ -19,7 +19,7 @@ export class Release {
   description: string;
 
   @Column({ nullable: true, comment: '发布图片' })
-  img?: string;
+  img: string;
 
   @Column({ nullable: true, comment: '发布内容' })
   content: string;
@@ -38,6 +38,12 @@ export class Release {
 
   @Column({ comment: '审批人' })
   owner: string;
+
+  @Column({ comment: '点赞量' })
+  focus: number;
+
+  @Column({ comment: '访问量' })
+  browse: number;
 
   @OneToMany(() => Review, (entity) => entity.release)
   @JoinColumn({ name: 'revoew_id' })

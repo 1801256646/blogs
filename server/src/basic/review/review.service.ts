@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { resultCode, Code } from '@/common/utils/api-code';
 import { UserService } from '@/core/user/user.service';
-import { ReleaseService } from '@/business/release/release.service';
+import { ReleaseService } from '@/basic/release/release.service';
 import { Review } from './entity/review.entity';
 import { ReviewInterface, UpdateReview } from './review.interface';
 

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { resultCode, Code } from '@/common/utils/api-code';
 import { Repository } from 'typeorm';
 import { User } from './entity/user.entity';
-import { CreateUser } from './user.interface';
+import { CreateUser, UpdateDto } from './user.interface';
 
 @Injectable()
 export class UserService {
@@ -53,7 +53,7 @@ export class UserService {
     return resultCode({ message: '新增失败', code: Code.API_ERROR });
   }
 
-  async update(name: string, updateDto) {
+  async update(name: string, updateDto: UpdateDto) {
     const entity = await this.findNameOne(name);
     const updateEntity = this.userRepository.merge(entity, updateDto);
     return this.userRepository.save(updateEntity);
