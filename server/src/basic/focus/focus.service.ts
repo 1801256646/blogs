@@ -70,7 +70,6 @@ export class FocusService {
     const updateEntity = await this.releaseService.update(releaseId, {
       browse: releaseEntity.data.browse + 1,
     });
-    console.log(releaseEntity.data.browse);
     return resultCode({ data: updateEntity });
   }
 }

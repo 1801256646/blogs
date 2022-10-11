@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 import BodyScreen from '@/presentation/components/body-screen';
 import { getUsername } from '@/utils/auth';
-import { ReleasePost } from '@/application/service/release';
+import { ReleasePost,ReleasePostReq } from '@/application/service/release';
 import styles from './index.module.scss';
 
 const Release: FC = () => {
@@ -17,10 +17,10 @@ const Release: FC = () => {
         }
     })
 
-    const handleFinish = (value: Record<string, string>) => {
+    const handleFinish = (value: ReleasePostReq) => {
         run({
             ...value,
-            creator: getUsername(),
+            creator: getUsername() || '',
         })
     }
 

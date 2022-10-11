@@ -27,7 +27,7 @@ export class Release {
   @Column({ name: 'create-time', comment: '创建时间' })
   createTime: Date;
 
-  @Column({ name: 'update-time', comment: '更kk新时间' })
+  @Column({ name: 'update-time', comment: '更新时间' })
   updateTime: Date;
 
   @Column({ comment: '创建人' })

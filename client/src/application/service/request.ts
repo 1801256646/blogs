@@ -1,4 +1,5 @@
-import axios, { AxiosResponse} from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import qs from 'qs';
 
 export interface CommonAPI<T = {}> {
     code: number;
@@ -21,4 +22,24 @@ request.interceptors.response.use((res: AxiosResponse<CommonAPI>) => {
     return Promise.resolve(res);
 })
 
-export default request;
+export interface Request<T> {
+    data?: T;
+    url: string;
+}
+export enum Method {
+    Get = 'GET',
+    Post = 'POST',
+}
+export class HttpClient {
+    post<T>(dto: Request<T>) {
+        const { data, url } = dto;
+        return request.post(url, data);
+    }
+    get<T>(dto: Request<T>) {
+        const { data, url } = dto;
+        const query = qs.stringify(data);
+        return request.get(`${url}?${query}`);
+    }
+}
+const client = new HttpClient();
+export default client;

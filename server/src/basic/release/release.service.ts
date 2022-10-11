@@ -68,7 +68,6 @@ export class ReleaseService extends TypeormHelperService<Release> {
    */
   async getApproverList(owner: string) {
     const listEntity = await this.findAll();
-    console.log(listEntity);
     const approverList = listEntity.filter((item) => {
       return (
         item.owner.split(';').includes(owner) &&

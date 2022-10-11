@@ -10,7 +10,6 @@ export interface BodyScreenProps {
 
 const BodyScreen: FC<BodyScreenProps> = (props) => {
     const { className, children, ...rest } = props;
-    console.log(props)
 
     return (
         <div className={classnames(className, styles.body)} {...rest}>
