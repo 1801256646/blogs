@@ -1,4 +1,10 @@
-.list {
-    width: 560px;
-    background-color: #fff;
+.homeList {
+    margin-bottom: 10px;
+    :global {
+        .ant-comment-actions {
+            li {
+                margin-right: 6px;
+            }
+        }
+    }
 }

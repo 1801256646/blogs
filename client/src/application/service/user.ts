@@ -9,6 +9,15 @@ export type RegisterUserReq = LoginUserReq & {
     cname: string;
 }
 
+export type UserData = {
+    username: string;
+    cname: string;
+    id: number;
+    createTime: string;
+    focus: string[];
+    collection: number[];
+}
+
 // 登陆当前用户
 export const LoginUser = async (data: LoginUserReq): Promise<CommonAPI> => {
     const res = await request.post({
@@ -26,3 +35,11 @@ export const RegisterUser = async (data: RegisterUserReq): Promise<CommonAPI> =>
     });
     return res.data;
 };
+
+// export const getUser = async (id: ): Promise<CommonAPI> => {
+//     const res = await request.post({
+//         url: '/user/add',
+//         data
+//     });
+//     return res.data;
+// };

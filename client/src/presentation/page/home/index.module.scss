@@ -1,5 +1,24 @@
 .home {
     display: flex;
     justify-content: space-between;
-    height: 500px
+}
+
+.list {
+    width: 560px;
+
+    .title {
+        font-size: 20px;
+    }
+
+    .content {
+        color: rgba(0,0,0,0.5)
+    }
+
+    .package {
+        margin-bottom: 10px;
+
+        &:hover {
+            background-color: #f6f6f7;
+        }
+    }
 }

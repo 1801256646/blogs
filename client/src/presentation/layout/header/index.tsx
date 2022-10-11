@@ -2,7 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Space, Button, Avatar, Dropdown, Menu } from 'antd';
 import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
-import { isLogin, getUsername } from '@/utils/auth';
+import { isLogin, getUsername } from '@/utils/user';
 import Logo from './logo.png';
 import styles from '../index.module.scss';
 

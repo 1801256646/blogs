@@ -17,14 +17,14 @@ const AppLayout: FC<AppLayoutProps> = (props) => {
         const username = localStorage.getItem('username');
         const loginUser = async () => {
             try {
-                const { code } = await LoginUser({
+                const { code, data } = await LoginUser({
                     username: username || '',
                     password: localStorage.getItem('password') || '',
                 })
+                localStorage.setItem('user', JSON.stringify(data))
                 if (code !== 0) {
                     localStorage.removeItem('username');
                     localStorage.removeItem('password');
-                    console.log(localStorage.removeItem('username'))
                 }
             } catch (err) {
                 localStorage.removeItem('username');

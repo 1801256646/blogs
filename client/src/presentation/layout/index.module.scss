@@ -1,5 +1,7 @@
 .layout {
     height: 100%;
+    display: flex;
+    flex-direction: column;
 
     .header {
         width: 1300px;
@@ -39,6 +41,12 @@
             color: #fff;
             font-size: 30px;
             text-align: center;
+        }
+
+        .ant-layout-content {
+            min-height: auto;
+            flex: 1;
+            background: #f0f2f5;
         }
     }
 }

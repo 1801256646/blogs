@@ -20,6 +20,7 @@ const Login: FC = () => {
                     const value = form.getFieldsValue();
                     localStorage.setItem('username', value.username);
                     localStorage.setItem('password', value.password);
+                    localStorage.setItem('user', JSON.stringify(data?.data))
                     setTimeout(() => {
                         history.push('/');
                     }, 1000);

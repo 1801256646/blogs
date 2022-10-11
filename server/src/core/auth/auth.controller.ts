@@ -15,7 +15,7 @@ export class AuthController {
       return resultCode({ code: Code.API_ERROR, message: '不存在该用户' });
     }
     if (password === userEntity.password) {
-      return resultCode();
+      return resultCode({ data: userEntity });
     }
     return resultCode({ code: Code.API_ERROR, message: '密码错误' });
   }

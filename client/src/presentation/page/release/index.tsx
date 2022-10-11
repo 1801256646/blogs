@@ -3,7 +3,7 @@ import { Card, Form, Input, Button, message } from 'antd';
 import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 import BodyScreen from '@/presentation/components/body-screen';
-import { getUsername } from '@/utils/auth';
+import { getUsername } from '@/utils/user';
 import { ReleasePost,ReleasePostReq } from '@/application/service/release';
 import styles from './index.module.scss';
 

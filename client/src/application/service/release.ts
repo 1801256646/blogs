@@ -16,3 +16,17 @@ export const ReleasePost = async (data: ReleasePostReq): Promise<CommonAPI> => {
     });
     return res.data;
 };
+
+export type FocusReleaseReq = {
+    username: string;
+    releaseId: number;
+}
+
+// 对文章点赞
+export const focusRelease = async (data: FocusReleaseReq): Promise<CommonAPI> => {
+    const res = await client.get({
+        url: 'focus',
+        data,
+    });
+    return res.data;
+}
