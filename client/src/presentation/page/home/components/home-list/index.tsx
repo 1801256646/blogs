@@ -4,6 +4,7 @@ import moment from 'moment';
 import { ReleaseData } from '@/application/service/home';
 import { focusRelease } from '@/application/service/release';
 import React, { FC, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { getUsername, getUser } from '@/utils/user';
 import { getUpdateAtLabel } from '@/utils/time';
 import styles from './index.module.scss';
@@ -13,10 +14,15 @@ const { Paragraph } = Typography;
 const HomeList: FC<{ release: ReleaseData }> = (props) => {
     const { release } = props;
     const user = getUser();
+    const history = useHistory();
     const [likes, setLikes] = useState(release.focus || 0);
   const [action, setAction] = useState<string | null>('open');
 
     const like = async () => {
+        if (!getUsername()) {
+            message.info('请先登陆');
+            setTimeout(() => history.push('/login'), 1000);
+        }
         const { code } = await focusRelease({
             username: user.username,
             releaseId: release.id,

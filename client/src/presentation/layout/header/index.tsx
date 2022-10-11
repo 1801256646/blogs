@@ -15,6 +15,7 @@ const Header: FC = () => {
     const handleOff = () => {
         localStorage.removeItem('username');
         localStorage.removeItem('password');
+        localStorage.removeItem('user');
         // eslint-disable-next-line no-restricted-globals
         location.reload();
     }
