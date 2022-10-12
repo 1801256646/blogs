@@ -10,4 +10,6 @@ export interface UpdateDto extends Partial<CreateUser> {
   focus?: number[];
 
   collection?: number[];
+
+  description?: string;
 }

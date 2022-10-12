@@ -22,4 +22,7 @@ export class User {
 
   @Column({ type: 'simple-array', nullable: true, comment: '收藏' })
   collection: number[];
+
+  //   @Column({ comment: '简介' })
+  //   description: string;
 }

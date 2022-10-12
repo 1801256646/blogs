@@ -3,6 +3,7 @@ import Home from '@/presentation/page/home';
 import Login from '@/presentation/page/login';
 import Register from '@/presentation/page/register';
 import Release from '@/presentation/page/release';
+import Detail from '@/presentation/page/detail';
 
 export const router: RouteConfig[] = [
     {
@@ -21,5 +22,9 @@ export const router: RouteConfig[] = [
     {
         path: '/release',
         component: Release,
-    }
+    },
+    {
+        path: '/detail',
+        component: Detail,
+    },
 ];

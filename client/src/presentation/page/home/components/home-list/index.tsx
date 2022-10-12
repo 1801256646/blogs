@@ -16,14 +16,15 @@ const HomeList: FC<{ release: ReleaseData }> = (props) => {
     const user = getUser();
     const history = useHistory();
     const [likes, setLikes] = useState(release.focus || 0);
-  const [action, setAction] = useState<string | null>('open');
+    const [action, setAction] = useState<string | null>('open');
 
-    const like = async () => {
+    const like = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        e.stopPropagation();
         if (!getUsername()) {
             message.info('请先登陆');
             setTimeout(() => history.push('/login'), 1000);
         }
-        const { code } = await focusRelease({
+        const { code, data } = await focusRelease({
             username: user.username,
             releaseId: release.id,
         })
@@ -31,13 +32,12 @@ const HomeList: FC<{ release: ReleaseData }> = (props) => {
             message.success(action === 'open' ? '取消点赞成功' : '点赞成功');
             setLikes(action === 'open' ? (likes - 1) : (likes + 1));
             setAction(action === 'open' ? 'off' : 'open');
-            console.log(action)
-            console.log(action === 'open' ? 'off' : 'open')
+            localStorage.setItem('user', JSON.stringify(data));
         }
-  };
+    };
     
     useEffect(() => {
-        if (user.focus?.includes(String(release.id))) {
+        if (user?.focus?.includes(String(release.id))) {
             setAction('open');
         } else {
             setAction('off');
@@ -46,7 +46,7 @@ const HomeList: FC<{ release: ReleaseData }> = (props) => {
 
     const actions = [
         <Tooltip key="comment-basic-like" title="关注">
-            <Space onClick={like}>
+            <Space onClick={(e) => like(e)}>
                 {action === 'off' ? <LikeOutlined /> : <LikeFilled />}
                 <span className="comment-action">{likes}</span>
             </Space>

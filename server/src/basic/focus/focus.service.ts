@@ -24,22 +24,22 @@ export class FocusService {
         remote.focus.findIndex((item) => item === releaseId),
         1,
       );
-      await this.userService.update(username, {
+      const updateUser = await this.userService.update(username, {
         focus: remote.focus,
       });
       await this.releaseService.update(releaseId, {
         focus: releaseEntity.data.focus - 1,
       });
-      return resultCode();
+      return resultCode({ data: updateUser });
     }
 
-    const updateRelease = await this.releaseService.update(releaseId, {
+    await this.releaseService.update(releaseId, {
       focus: releaseEntity.data.focus + 1,
     });
-    await this.userService.update(username, {
+    const updateUser = await this.userService.update(username, {
       focus: [...(userEntity?.focus || []), releaseId],
     });
-    return resultCode({ data: updateRelease });
+    return resultCode({ data: updateUser });
   }
 
   async collection(dto: CollectionDto) {
@@ -54,10 +54,10 @@ export class FocusService {
         remote.collection.findIndex((item) => item === releaseId),
         1,
       );
-      await this.userService.update(username, {
+      const updateUser = await this.userService.update(username, {
         collection: remote.collection,
       });
-      return resultCode();
+      return resultCode({ data: updateUser });
     }
     await this.userService.update(username, {
       collection: [...(userEntity?.collection || []), releaseId],
