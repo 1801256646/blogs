@@ -21,7 +21,7 @@ export type ReleaseData = {
     creator: string;
     focus: number;
     browse: number;
-    review: ReviewData;
+    review: ReviewData[];
 }
 
 export type ReviewData = {
@@ -29,7 +29,7 @@ export type ReviewData = {
     username: string;
     text: string;
     createTime: string;
-    childReview: ReplyData[]
+    childReview: ReplyData[];
 }
 
 export type ReplyData = ReviewData & {

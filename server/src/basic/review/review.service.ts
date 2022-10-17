@@ -32,11 +32,10 @@ export class ReviewService {
     if (!userEntity) {
       return resultCode({ code: Code.API_ERROR, message: '请先登陆' });
     }
-    const { data: releaseEntity } = await this.releaseService.findOne(
-      dto.releaseId,
-    );
+    const { data: releaseEntity } = await this.releaseService.findOne(dto.id);
     await this.reviewRepository.insert({
-      ...dto,
+      username: dto.username,
+      text: dto.text,
       createTime: new Date(),
       release: releaseEntity,
     });

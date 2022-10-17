@@ -1,12 +1,14 @@
 import { useRequest } from 'ahooks';
 import { UserOutlined, LikeOutlined, LikeFilled, ReadOutlined, HeartOutlined } from '@ant-design/icons';
-import { Avatar, Comment, Card, Typography, Space, Spin, message } from 'antd';
-import React, { FC, useState, useEffect } from 'react';
+import { Avatar, Comment, Card, Typography, Space, Spin, message, Input, Button } from 'antd';
+import React, { FC, useState, useEffect, useMemo } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import moment from 'moment';
-import { releaseDetail, focusRelease, browseRelease } from '@/application/service/release';
+import { releaseDetail, focusRelease, browseRelease, commentRelease, CommentReleaseReq } from '@/application/service/release';
 import BodyScreen from '@/presentation/components/body-screen';
+import { CommentType } from '@/application/enum/release';
 import { getUser } from '@/utils/user';
+import ChildrenComment from './components/children-comment';
 import styles from './index.module.scss'
 
 const { Title, Paragraph } = Typography;
@@ -17,18 +19,20 @@ const Detail: FC = () => {
     const history = useHistory();
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get('id') || '';
-    const [likes, setLikes] = useState(0);
-    const [action, setAction] = useState<string | null>('open');
+    const [likes, setLikes] = useState<number>(0);
+    const [action, setAction] = useState<string>('open');
+    const [inputValue, setInputValue] = useState<string>('');
 
-    const { data, loading } = useRequest(() => releaseDetail(id), {
+    const { data, loading, run } = useRequest(() => releaseDetail(id), {
         ready: !!id,
         refreshDeps: [id],
         onSuccess: (data) => {
-            setLikes(data?.data?.focus);
-        }
+            setLikes(data?.data?.focus || 0);
+            data?.data?.review.sort((b, a) => (new Date(b.createTime).getTime() - new Date(a.createTime).getTime()));
+        },
     });
 
-    useRequest(() => browseRelease(id), { ready: !!id, refreshDeps: [id] });
+    useRequest(() => browseRelease(id), { ready: !!id });
 
     const like = async () => {
         if (!user.username) {
@@ -47,6 +51,24 @@ const Detail: FC = () => {
         }
     };
 
+    const handleComment = async (props: CommentReleaseReq) => {
+        try {
+            const { code, message: msg } = await commentRelease(props);
+            if (code === 0) {
+                message.success('评论成功');
+                setInputValue('');
+                run();
+            } else {
+                message.error(msg);
+            }
+        } catch (err: any) {
+            console.log(err.message)
+            message.success(err.message);
+        }
+    };
+
+    const commentSum = useMemo(() => data?.data?.review?.reduce((pre, cur) => pre + 1 + cur.childReview.length, 0), [data]);
+
     const actions = [
         <Space onClick={like}>
             {action === 'off' ? <LikeOutlined /> : <LikeFilled />}
@@ -54,7 +76,7 @@ const Detail: FC = () => {
         </Space>,
         <Space>
             <ReadOutlined />
-            <span>{`浏览（${data?.data?.browse || 0}）`}</span>  
+            <span>{`浏览（${data?.data?.browse || 0}）`}</span>
         </Space>,
         <Space>
             <HeartOutlined />
@@ -68,7 +90,7 @@ const Detail: FC = () => {
         } else {
             setAction('off');
         }
-    }, [user.username, id]);
+    }, [user.username, id, user.focus]);
   
     return (
         <Spin spinning={loading}>
@@ -84,12 +106,51 @@ const Detail: FC = () => {
                         }
                     />
                     <Title level={2}>{data?.data?.title}</Title>
-                    <Paragraph>
-                        {data?.data?.content}
+                    <Paragraph style={{ 'whiteSpace': 'pre-line' }} className={styles.content}>
+                        <pre>{data?.data?.content}</pre>
                     </Paragraph>
                 </Card>
-                <Card>
-                    
+                <Card className={styles.comments}>
+                    <p className={styles.commentsSum}>{`${commentSum}条评论`}</p>
+                    <Input.TextArea
+                        onChange={(e) => setInputValue(e.target.value)}
+                        value={inputValue}
+                        autoSize={{ minRows: 5, maxRows: 5 }}
+                        placeholder='发布你的评论'
+                    />
+                    <Button type='primary' className={styles.commentsSubmit} onClick={() => handleComment({
+                        type: CommentType.Comment,
+                        text: inputValue,
+                        username: user.username,
+                        id: +id,
+                    })}>评论</Button>
+                    {
+                        data?.data?.review?.map((item) => (
+                            <ChildrenComment
+                                username={item.username}
+                                content={item.text}
+                                id={item.id}
+                                key={item.id}
+                                createTime={item.createTime}
+                                type={CommentType.ChildrenComment}
+                                handleComment={handleComment}
+                            >
+                                {
+                                    item.childReview.map((childItem, idx) => (
+                                        <ChildrenComment
+                                            username={childItem.username}
+                                            content={childItem.text}
+                                            id={item.id}
+                                            key={idx}
+                                            createTime={childItem.createTime}
+                                            type={CommentType.ChildrenComment}
+                                            handleComment={handleComment}
+                                        />
+                                    ))
+                                }
+                            </ChildrenComment>
+                        ))
+                    }
                 </Card>
             </BodyScreen>
         </Spin>

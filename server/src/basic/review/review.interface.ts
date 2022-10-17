@@ -7,7 +7,7 @@ export interface ReviewInterface {
 
   replier?: string;
 
-  releaseId: number;
+  id: number;
 }
 
 export interface UpdateReview {

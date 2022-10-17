@@ -7,5 +7,5 @@ export interface ReplyComment {
 
   replier?: string;
 
-  reviewId: number;
+  id: number;
 }

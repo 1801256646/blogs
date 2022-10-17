@@ -28,12 +28,12 @@ export class ReplyService {
    * 回复评论
    */
   async reply(dto: ReplyComment) {
-    const { reviewId, replier, text, username } = dto;
+    const { id, replier, text, username } = dto;
     const userEntity = await this.userService.findNameOne(username);
     if (!userEntity) {
       return resultCode({ code: Code.API_ERROR, message: '请先登陆' });
     }
-    const reviewEntity = await this.reviewService.findOne(reviewId);
+    const reviewEntity = await this.reviewService.findOne(id);
     await this.replyRepository.insert({
       replier,
       text,

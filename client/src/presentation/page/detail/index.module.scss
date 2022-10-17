@@ -10,4 +10,74 @@
             font-size: 14px;
         }
     }
+
+    .content {
+        font-size: 15px;
+        line-height: 30px;
+    }
+
+    .comments {
+        margin-top: 20px;
+
+        .commentsSum {
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .commentsSubmit {
+            display: block;
+            width: 64px;
+            margin: 10px calc(100% - 70px);
+        }
+
+        :global {
+            .ant-comment-content-detail {
+                font-size: 14px;
+                color: #333;
+                font-weight: 300;
+            }
+
+            .ant-comment-content-author-name {
+                font-size: 14px;
+                color: #333;
+                font-weight: 700;
+            }
+
+            .ant-comment-content-author {
+                display: flex;
+                justify-content: space-between;
+
+                .ant-comment-content-author-time {
+                    font-size: 14px;
+                    color: #333;
+                    font-weight: 300;
+                }
+            }
+
+            .ant-comment-actions li {
+                display: block;
+                margin-bottom: 10px;
+
+                .ant-input {
+                    border-radius: 5px;
+                    margin-bottom: 5px;
+                }
+            }
+        }
+
+        .childrenComment {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+    }
+}
+
+.commentLink {
+    cursor: pointer;
+}
+
+.link {
+    color: #1890ff;
 }
