@@ -24,7 +24,10 @@ export class ReleaseService extends TypeormHelperService<Release> {
     const entity = await this.releaseRepository
       .createQueryBuilder('release')
       .leftJoinAndSelect('release.review', 'review')
-      .leftJoinAndSelect('review.childReview', 'childReview')
+      .leftJoinAndSelect('release.user', 'releaseUser')
+      .leftJoinAndSelect('review.childReview', 'reply')
+      .leftJoinAndSelect('review.user', 'reviewUser')
+      .leftJoinAndSelect('reply.user', 'replyUser')
       .where('release.id=:id', { id: +id })
       .getOne();
     return resultCode({ data: entity });
@@ -52,13 +55,14 @@ export class ReleaseService extends TypeormHelperService<Release> {
     const approverEntity = await this.approverService.find();
     await this.releaseRepository.insert({
       ...releaseDto,
-      img: img?.join(';'),
+      img,
       createTime: new Date(),
       updateTime: new Date(),
       status: ReleaseStatus.UnApproval,
       owner: approverEntity.owner,
       focus: 0,
       browse: 0,
+      user: userEntity,
     });
     return resultCode();
   }

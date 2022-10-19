@@ -32,7 +32,8 @@ const AppLayout: FC<AppLayoutProps> = (props) => {
             }
         };
         username && loginUser();
-    }, [])
+    }, []);
+
     return (
         <Layout className={styles.layout}>
             <Header><AppHeader /></Header>

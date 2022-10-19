@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Reply } from '@/basic/reply/entity/reply.entity';
 import { Release } from '@/basic/release/entity/release.entity';
+import { User } from '@/core/user/entity/user.entity';
 
 @Entity()
 export class Review {
@@ -29,4 +30,7 @@ export class Review {
 
   @ManyToOne(() => Release, (entity) => entity.review)
   release: Release;
+
+  @ManyToOne(() => User, (user) => user.review)
+  user: User;
 }

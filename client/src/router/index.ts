@@ -4,6 +4,7 @@ import Login from '@/presentation/page/login';
 import Register from '@/presentation/page/register';
 import Release from '@/presentation/page/release';
 import Detail from '@/presentation/page/detail';
+import User from '@/presentation/page/user';
 
 export const router: RouteConfig[] = [
     {
@@ -26,5 +27,9 @@ export const router: RouteConfig[] = [
     {
         path: '/detail',
         component: Detail,
+    },
+    {
+        path: '/user',
+        component: User,
     },
 ];

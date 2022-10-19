@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Review } from '@/basic/review/entity/review.entity';
+import { User } from '@/core/user/entity/user.entity';
 
 @Entity()
 export class Release {
@@ -18,8 +20,8 @@ export class Release {
   @Column({ comment: '发布简介', nullable: true })
   description: string;
 
-  @Column({ nullable: true, comment: '发布图片' })
-  img: string;
+  @Column({ nullable: true, comment: '发布图片', type: 'simple-array' })
+  img: string[];
 
   @Column({ nullable: true, comment: '发布内容' })
   content: string;
@@ -48,4 +50,7 @@ export class Release {
   @OneToMany(() => Review, (entity) => entity.release)
   @JoinColumn({ name: 'revoew_id' })
   review: Review[];
+
+  @ManyToOne(() => User, (user) => user.release)
+  user: User;
 }

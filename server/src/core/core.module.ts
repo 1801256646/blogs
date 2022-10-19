@@ -3,8 +3,9 @@ import { TestModule } from './test/test.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ApproverModule } from './approver/approver.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
-  imports: [TestModule, UserModule, AuthModule, ApproverModule],
+  imports: [TestModule, UserModule, AuthModule, ApproverModule, UploadModule],
 })
 export class CoreModule {}

@@ -38,6 +38,7 @@ export class ReviewService {
       text: dto.text,
       createTime: new Date(),
       release: releaseEntity,
+      user: userEntity,
     });
     return resultCode();
   }

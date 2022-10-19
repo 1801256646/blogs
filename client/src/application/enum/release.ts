@@ -1,6 +1,7 @@
 export enum ReleaseOrderBy {
     UpdateTime = 'updateTime',
-    Star = 'star',
+    Focus = 'focus',
+    Browse = 'browse',
 }
 
 export enum CommentType {

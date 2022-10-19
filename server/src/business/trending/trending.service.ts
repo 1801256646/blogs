@@ -10,17 +10,27 @@ export class TrendingService {
   async home(dto: HomeListDto) {
     const { page, pageSize, orderBy } = dto;
     let sort = 'release.updateTime';
-    if (orderBy === 'star') {
+    if (orderBy === 'browse') {
       sort = 'release.browse';
     }
+    if (orderBy === 'focus') {
+      sort = 'release.focus';
+    }
+
     const query = this.releaseService
       .createQueryBuilder('release')
       .leftJoinAndSelect('release.review', 'review')
       .leftJoinAndSelect('review.childReview', 'childReview')
-      .offset(pageSize * (page - 1))
-      .limit(pageSize);
+      .leftJoinAndSelect('release.user', 'releaseUser')
+      .leftJoinAndSelect('review.user', 'reviewUser')
+      .leftJoinAndSelect('childReview.user', 'replyUser');
 
-    const [list, total] = await query.orderBy(sort, 'DESC').getManyAndCount();
+    const [list, total] = await query
+      .orderBy(sort, 'DESC')
+      .offset(pageSize * (page - 1))
+      .limit(pageSize)
+      .getManyAndCount();
+
     return resultCode({
       data: {
         total,

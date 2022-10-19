@@ -40,6 +40,7 @@ export class ReplyService {
       createTime: new Date(),
       childReview: reviewEntity,
       username,
+      user: userEntity,
     });
     return resultCode();
   }

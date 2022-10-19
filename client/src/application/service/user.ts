@@ -16,7 +16,12 @@ export type UserData = {
     createTime: string;
     focus: string[];
     collection: number[];
+    avatar: string;
+    description: string;
+    password: string;
 }
+
+export type UpdateUserReq = Partial<UserData>;
 
 // 登陆当前用户
 export const LoginUser = async (data: LoginUserReq): Promise<CommonAPI> => {
@@ -36,10 +41,20 @@ export const RegisterUser = async (data: RegisterUserReq): Promise<CommonAPI> =>
     return res.data;
 };
 
-// export const getUser = async (id: ): Promise<CommonAPI> => {
-//     const res = await request.post({
-//         url: '/user/add',
-//         data
-//     });
-//     return res.data;
-// };
+// 获取用户信息
+export const getUserInfo = async (username: string): Promise<CommonAPI<UserData>> => {
+    const res = await request.get({
+        url: '/user/get-user',
+        data: { username },
+    });
+    return res.data;
+};
+
+// 更新用户信息
+export const UpdateUser = async (data: UpdateUserReq): Promise<CommonAPI<UserData>> => {
+    const res = await request.post({
+        url: '/user/update',
+        data,
+    });
+    return res.data;
+};

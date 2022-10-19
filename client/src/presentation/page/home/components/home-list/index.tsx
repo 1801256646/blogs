@@ -1,10 +1,10 @@
 import { ReadOutlined , LikeFilled, LikeOutlined } from '@ant-design/icons';
 import { Avatar, Tooltip, Comment, Typography, Space, message } from 'antd';
 import moment from 'moment';
-import { ReleaseData } from '@/application/service/home';
-import { focusRelease } from '@/application/service/release';
 import React, { FC, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { ReleaseData } from '@/application/service/home';
+import { focusRelease } from '@/application/service/release';
 import { getUsername, getUser } from '@/utils/user';
 import { getUpdateAtLabel } from '@/utils/time';
 import styles from './index.module.scss';
@@ -63,12 +63,17 @@ const HomeList: FC<{ release: ReleaseData }> = (props) => {
         <Comment
             actions={actions}
             className={styles.homeList}
-            author={release.creator || 'U'}
-            avatar={<Avatar size={40}>{(getUsername()?.[0] || 'u').toLocaleUpperCase()}</Avatar>}
+            author={release.user?.cname || release.user?.username}
+            avatar={<Avatar size={40} src={release.user?.avatar}>{(getUsername()?.[0] || 'u').toLocaleUpperCase()}</Avatar>}
             content={
                 <div>
                     <p className={styles.title}>{release.title}</p>
                     <Paragraph ellipsis={{ rows: 3 }} className={styles.content}>{release.content}</Paragraph>
+                    <div className={styles.homeListImage}>
+                        {release?.img?.map(item => (
+                            <img alt='' src={item} />
+                        ))}
+                    </div>
                 </div>
             }
             datetime={

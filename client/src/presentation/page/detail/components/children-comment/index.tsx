@@ -3,26 +3,24 @@ import { Comment, Space, Input, Button, Avatar } from 'antd';
 import React, { FC, useState } from 'react';
 import clsx from 'classnames';
 import { CommentReleaseReq } from '@/application/service/release';
+import { ReplyData } from '@/application/service/home';
 import { getUser } from '@/utils/user';
 import { getUpdateAtLabel } from '@/utils/time';
 import { CommentType } from '@/application/enum/release';
 import styles from '@/presentation/page/detail/index.module.scss';
 
-export interface CommentProps {
+export interface CommentProps extends ReplyData {
     children?: React.ReactNode;
-    username: string;
-    content: string;
-    id: number;
-    createTime: string;
     type: CommentType;
     handleComment?: (props: CommentReleaseReq) => void
 }
 
 const ChildrenComment: FC<CommentProps> = (props) => {
-    const { children, username, content, createTime, type, id, handleComment } = props;
+    const { children, user: reviewUser, text, createTime, type, id, handleComment, replier } = props;
     const [isShowComment, setIsShowComment] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const user = getUser();
+    const reviewUsername = reviewUser?.cname || reviewUser?.username;
 
     const handleClick = () => {
         handleComment?.({
@@ -30,9 +28,16 @@ const ChildrenComment: FC<CommentProps> = (props) => {
             text: inputValue,
             username: user.username,
             id: +id,
+            replier: reviewUsername,
         });
         setIsShowComment(false);
     };
+
+    const replyContent = () => (
+        <Space className={styles.reply}>
+            <span>{reviewUsername}</span>回复<span>{replier}</span>
+        </Space>
+    )
 
     return (
         <Comment
@@ -48,11 +53,11 @@ const ChildrenComment: FC<CommentProps> = (props) => {
                     </div>
                 ),
             ]}
-            author={username}
-            avatar={<Avatar size={40}>{username[0].toUpperCase()}</Avatar>}
+            author={replier ? replyContent() : reviewUsername}
+            avatar={<Avatar size={40} src={reviewUser?.avatar}>{reviewUser?.cname[0].toUpperCase()}</Avatar>}
             content={
                 <p>
-                    {content}
+                    {text}
                 </p>
             }
             datetime={getUpdateAtLabel(createTime)}

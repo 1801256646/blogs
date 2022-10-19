@@ -20,6 +20,7 @@ export type CommentReleaseReq = {
     text: string;
     id: number;
     type: CommentType;
+    replier?: string;
 }
 
 // 发布帖子

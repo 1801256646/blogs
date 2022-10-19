@@ -5,6 +5,7 @@ declare module '*.jpeg'
 declare module '*.gif'
 declare module '*.bmp'
 declare module '*.tiff'
+declare module 'react-zmage'
 declare module '*.scss' {
     const content: any;
     export default content;

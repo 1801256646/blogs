@@ -4,6 +4,7 @@ import { Avatar, Comment, Card, Typography, Space, Spin, message, Input, Button 
 import React, { FC, useState, useEffect, useMemo } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import moment from 'moment';
+import Zmage from 'react-zmage';
 import { releaseDetail, focusRelease, browseRelease, commentRelease, CommentReleaseReq } from '@/application/service/release';
 import BodyScreen from '@/presentation/components/body-screen';
 import { CommentType } from '@/application/enum/release';
@@ -63,7 +64,7 @@ const Detail: FC = () => {
             }
         } catch (err: any) {
             console.log(err.message)
-            message.success(err.message);
+            message.error(err.message);
         }
     };
 
@@ -91,6 +92,11 @@ const Detail: FC = () => {
             setAction('off');
         }
     }, [user.username, id, user.focus]);
+
+    data?.data?.review?.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime());
+    data?.data?.review?.forEach((item) => {
+        item.childReview.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime());
+    });
   
     return (
         <Spin spinning={loading}>
@@ -98,7 +104,7 @@ const Detail: FC = () => {
                 <Card actions={actions}>
                     <Comment
                         author={user.cname || user.username}
-                        avatar={<Avatar size={40} icon={<UserOutlined />} />}
+                        avatar={<Avatar size={40} src={data?.data?.user?.avatar} icon={<UserOutlined />} />}
                         content={
                             <p>
                                 发布于{moment(data?.data?.createTime).format('YYYY-MM-DD HH:mm:ss')}
@@ -107,8 +113,13 @@ const Detail: FC = () => {
                     />
                     <Title level={2}>{data?.data?.title}</Title>
                     <Paragraph style={{ 'whiteSpace': 'pre-line' }} className={styles.content}>
-                        <pre>{data?.data?.content}</pre>
+                        { data?.data?.content && <pre>{data?.data?.content}</pre>}
                     </Paragraph>
+                    <div className={styles.image}>
+                        {data?.data?.img?.map(item => (
+                            <Zmage alt='' src={item} />
+                        ))}
+                    </div>
                 </Card>
                 <Card className={styles.comments}>
                     <p className={styles.commentsSum}>{`${commentSum}条评论`}</p>
@@ -127,22 +138,17 @@ const Detail: FC = () => {
                     {
                         data?.data?.review?.map((item) => (
                             <ChildrenComment
-                                username={item.username}
-                                content={item.text}
-                                id={item.id}
+                                {...item}
                                 key={item.id}
-                                createTime={item.createTime}
                                 type={CommentType.ChildrenComment}
                                 handleComment={handleComment}
                             >
                                 {
                                     item.childReview.map((childItem, idx) => (
                                         <ChildrenComment
-                                            username={childItem.username}
-                                            content={childItem.text}
+                                            {...childItem}
                                             id={item.id}
                                             key={idx}
-                                            createTime={childItem.createTime}
                                             type={CommentType.ChildrenComment}
                                             handleComment={handleComment}
                                         />

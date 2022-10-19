@@ -16,6 +16,14 @@
         line-height: 30px;
     }
 
+    .image {
+        display: flex;
+        img {
+            width: 220px;
+            margin: 10px 10px 10px 0;
+        }
+    }
+
     .comments {
         margin-top: 20px;
 
@@ -64,6 +72,10 @@
                     margin-bottom: 5px;
                 }
             }
+
+            .ant-comment-content-author-name>*, .ant-comment-content-author-name>:hover {
+                color: #333;
+            }
         }
 
         .childrenComment {
@@ -71,6 +83,12 @@
             flex-direction: column;
             align-items: flex-end;
         }
+    }
+
+    .reply {
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
     }
 }
 

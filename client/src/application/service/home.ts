@@ -1,5 +1,6 @@
 import client, { CommonAPI } from './request';
 import { ReleaseOrderBy } from '@/application/enum/release';
+import { UserData } from './user';
 
 export type getHomeListReq = {
     page: number;
@@ -22,6 +23,8 @@ export type ReleaseData = {
     focus: number;
     browse: number;
     review: ReviewData[];
+    img?: string[];
+    user?: UserData;
 }
 
 export type ReviewData = {
@@ -30,10 +33,11 @@ export type ReviewData = {
     text: string;
     createTime: string;
     childReview: ReplyData[];
+    user?: UserData;
 }
 
 export type ReplyData = ReviewData & {
-    replier: string;
+    replier?: string;
 }
 
 // 发布帖子
