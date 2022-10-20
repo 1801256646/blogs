@@ -15,7 +15,7 @@
         }
 
         .release {
-            width: 120px;
+            width: 100px;
             border-radius: 7px;
         }
 
@@ -48,5 +48,25 @@
             flex: 1;
             background: #f0f2f5;
         }
+    }
+}
+
+:global {
+    .ant-popover-placement-bottom {
+        .ant-popover-inner-content {
+            padding: 0;
+
+            .ant-menu-item-only-child {
+                height: 30px;
+                line-height: 30px;
+                margin: 10px 0;
+                color: #606266;
+
+                &:hover {
+                    background-color: #ecf5ff;
+                    color: #66b1ff;
+                }
+            }
+        }  
     }
 }

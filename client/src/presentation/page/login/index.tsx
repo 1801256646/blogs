@@ -2,25 +2,25 @@ import { useRequest } from 'ahooks';
 import { Card, Form, Input, Button, message } from 'antd';
 import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
+import { observer } from 'mobx-react';
 import { rule } from '@/types/user';
 import { LoginUser } from '@/application/service/user';
+import useAuth from '@/presentation/store/use-auth';
 import styles from './index.module.scss';
 
 const Login: FC = () => {
-    const [form] = Form.useForm();
     const history = useHistory();
+    const { loginUser: loginStoreUser } = useAuth();
 
     const { loading, run, error } = useRequest(
         LoginUser,
         {
             manual: true,
-            onSuccess: (data) => {
+            onSuccess: async (data) => {
                 if (data?.code === 0) {
                     message.success('登陆成功!');
-                    const value = form.getFieldsValue();
-                    localStorage.setItem('username', value.username);
-                    localStorage.setItem('password', value.password);
-                    localStorage.setItem('user', JSON.stringify(data?.data))
+                    localStorage.setItem('user', JSON.stringify(data?.data));
+                    loginStoreUser();
                     setTimeout(() => {
                         history.push('/');
                     }, 1000);
@@ -43,7 +43,7 @@ const Login: FC = () => {
 
     return (
         <Card title='登陆' className={styles.loginCard}>
-            <Form labelCol={{ span: 4 }} wrapperCol={{ span: 18 }} onFinish={handleFinish} form={form}>
+            <Form labelCol={{ span: 4 }} wrapperCol={{ span: 18 }} onFinish={handleFinish}>
                 <Form.Item label='用户名' name='username' rules={rule.username}>
                     <Input placeholder='请输入用户名' />
                 </Form.Item>
@@ -59,4 +59,4 @@ const Login: FC = () => {
     )
 };
 
-export default Login;
+export default observer(Login);

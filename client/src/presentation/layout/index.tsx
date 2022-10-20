@@ -1,6 +1,7 @@
 import { Layout } from 'antd'
 import React, { FC, useEffect } from 'react';
-import { LoginUser } from '@/application/service/user';
+import { observer } from 'mobx-react';
+import useAuth from '../store/use-auth';
 import AppHeader from './header';
 import styles from './index.module.scss';
 
@@ -12,26 +13,10 @@ const { Header, Footer, Content } = Layout;
 
 const AppLayout: FC<AppLayoutProps> = (props) => {
     const { component: Component } = props;
+    const { loginUser } = useAuth();
     
     useEffect(() => {
-        const username = localStorage.getItem('username');
-        const loginUser = async () => {
-            try {
-                const { code, data } = await LoginUser({
-                    username: username || '',
-                    password: localStorage.getItem('password') || '',
-                })
-                localStorage.setItem('user', JSON.stringify(data))
-                if (code !== 0) {
-                    localStorage.removeItem('username');
-                    localStorage.removeItem('password');
-                }
-            } catch (err) {
-                localStorage.removeItem('username');
-                localStorage.removeItem('password');
-            }
-        };
-        username && loginUser();
+        loginUser();
     }, []);
 
     return (
@@ -43,4 +28,4 @@ const AppLayout: FC<AppLayoutProps> = (props) => {
     );
 };
 
-export default AppLayout;
+export default observer(AppLayout);

@@ -44,4 +44,10 @@ export class User {
 
   @OneToMany(() => Reply, (reply) => reply.user)
   reply: Reply[];
+
+  @Column({ comment: '粉丝', nullable: true, type: 'simple-array' })
+  userFanc: number[];
+
+  @Column({ comment: '关注的人', nullable: true, type: 'simple-array' })
+  userFocus: number[];
 }

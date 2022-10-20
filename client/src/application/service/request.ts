@@ -17,7 +17,7 @@ request.interceptors.request.use();
 request.interceptors.response.use((res: AxiosResponse<CommonAPI>) => {
     const { code, message } = res.data;
     if (code !== 0) {
-        return Promise.reject(new Error(message));
+        return Promise.reject(message);
     }
     return Promise.resolve(res);
 })

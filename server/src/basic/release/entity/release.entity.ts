@@ -23,7 +23,7 @@ export class Release {
   @Column({ nullable: true, comment: '发布图片', type: 'simple-array' })
   img: string[];
 
-  @Column({ nullable: true, comment: '发布内容' })
+  @Column({ nullable: true, comment: '发布内容', type: 'mediumtext' })
   content: string;
 
   @Column({ name: 'create-time', comment: '创建时间' })

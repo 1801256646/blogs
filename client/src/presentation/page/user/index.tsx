@@ -3,15 +3,16 @@ import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Form, Input, message, Tabs, Upload } from 'antd';
 import React, { FC, useEffect, useState } from 'react';
 import type { UploadProps } from 'antd/es/upload';
+import { observer } from 'mobx-react';
 import { UpdateUser, getUserInfo } from '@/application/service/user';
 import BodyScreen from '@/presentation/components/body-screen';
-import { getUser } from '@/utils/user';
+import useAuth from '@/presentation/store/use-auth';
 import styles from './index.module.scss';
 
 const { TabPane } = Tabs;
 
 const User: FC = () => {
-    const user = getUser();
+    const { user } = useAuth();
     const [form] = Form.useForm();
     const [userForm] = Form.useForm();
     const [fileUrl, setFileUrl] = useState<string>('');
@@ -23,21 +24,20 @@ const User: FC = () => {
         },
     });
 
-    const { data } = useRequest(() => getUserInfo(user.username), {
-       ready: !!user.username,
+    const { data } = useRequest(() => getUserInfo(user?.username || ''), {
+       ready: !!user?.username,
     });
 
     const handleChange: UploadProps['onChange'] = (info) => { 
         if (info.file.status === 'done') {
-            setFileUrl(info.file.response.url);
-            console.log(info.file.response.url);
+            setFileUrl(info.file.response.data.url);
         };
     };
 
     const handleFinish = (value: Record<string, string>) => {
         const { cname, description } = value;
         updateUserRun({
-            username: user.username,
+            username: user?.username,
             cname,
             description,
             avatar: fileUrl,
@@ -120,4 +120,4 @@ const User: FC = () => {
     );
 };
 
-export default User;
+export default observer(User);

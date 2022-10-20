@@ -7,7 +7,7 @@ export type ReleasePostReq = {
     creator: string;
     username: string;
     title: string;
-    context: string;
+    content: string;
     img?: any;
     description?: string;
 }

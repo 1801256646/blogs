@@ -1,4 +1,5 @@
 import request, { CommonAPI } from './request';
+import { ReleaseData, ReviewData, ReplyData } from './home';
 
 export interface LoginUserReq {
     username: string;
@@ -19,12 +20,22 @@ export type UserData = {
     avatar: string;
     description: string;
     password: string;
+    release?: ReleaseData[];
+    review?: ReviewData[];
+    reply?: ReplyData[];
+    userFanc: string[];
+    userFocus: string[];
 }
 
 export type UpdateUserReq = Partial<UserData>;
 
+export type FocusUserReq = {
+    userId: string;
+    userFocus: string;
+}
+
 // 登陆当前用户
-export const LoginUser = async (data: LoginUserReq): Promise<CommonAPI> => {
+export const LoginUser = async (data: LoginUserReq): Promise<CommonAPI<UserData>> => {
     const res = await request.post({
         url: '/auth',
         data
@@ -58,3 +69,12 @@ export const UpdateUser = async (data: UpdateUserReq): Promise<CommonAPI<UserDat
     });
     return res.data;
 };
+
+// 关注用户
+export const focusUser = async (data: FocusUserReq): Promise<CommonAPI<UserData>> => {
+    const res = await request.post({
+        url: '/user/focus',
+        data,
+    });
+    return res.data;
+}

@@ -3,9 +3,10 @@ import { Avatar, Tooltip, Comment, Typography, Space, message } from 'antd';
 import moment from 'moment';
 import React, { FC, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { observer } from 'mobx-react';
 import { ReleaseData } from '@/application/service/home';
 import { focusRelease } from '@/application/service/release';
-import { getUsername, getUser } from '@/utils/user';
+import useAuth from '@/presentation/store/use-auth';
 import { getUpdateAtLabel } from '@/utils/time';
 import styles from './index.module.scss';
 
@@ -13,26 +14,26 @@ const { Paragraph } = Typography;
 
 const HomeList: FC<{ release: ReleaseData }> = (props) => {
     const { release } = props;
-    const user = getUser();
+    const { user, isLogin, loginUser } = useAuth();
     const history = useHistory();
     const [likes, setLikes] = useState(release.focus || 0);
     const [action, setAction] = useState<string | null>('open');
 
     const like = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation();
-        if (!getUsername()) {
+        if (!isLogin) {
             message.info('请先登陆');
             setTimeout(() => history.push('/login'), 1000);
         }
-        const { code, data } = await focusRelease({
-            username: user.username,
+        const { code } = await focusRelease({
+            username: user?.username || '',
             releaseId: release.id,
         })
         if (code === 0) {
             message.success(action === 'open' ? '取消点赞成功' : '点赞成功');
             setLikes(action === 'open' ? (likes - 1) : (likes + 1));
             setAction(action === 'open' ? 'off' : 'open');
-            localStorage.setItem('user', JSON.stringify(data));
+            loginUser();
         }
     };
     
@@ -42,7 +43,7 @@ const HomeList: FC<{ release: ReleaseData }> = (props) => {
         } else {
             setAction('off');
         }
-    }, [release]);
+    }, [user]);
 
     const actions = [
         <Tooltip key="comment-basic-like" title="关注">
@@ -64,7 +65,7 @@ const HomeList: FC<{ release: ReleaseData }> = (props) => {
             actions={actions}
             className={styles.homeList}
             author={release.user?.cname || release.user?.username}
-            avatar={<Avatar size={40} src={release.user?.avatar}>{(getUsername()?.[0] || 'u').toLocaleUpperCase()}</Avatar>}
+            avatar={<Avatar size={40} src={release.user?.avatar}>{(user?.username?.[0] || 'u').toLocaleUpperCase()}</Avatar>}
             content={
                 <div>
                     <p className={styles.title}>{release.title}</p>
@@ -85,4 +86,4 @@ const HomeList: FC<{ release: ReleaseData }> = (props) => {
     );
 };
 
-export default HomeList;
+export default observer(HomeList);

@@ -2,9 +2,10 @@ import { CommentOutlined } from '@ant-design/icons';
 import { Comment, Space, Input, Button, Avatar } from 'antd';
 import React, { FC, useState } from 'react';
 import clsx from 'classnames';
+import { observer } from 'mobx-react';
 import { CommentReleaseReq } from '@/application/service/release';
 import { ReplyData } from '@/application/service/home';
-import { getUser } from '@/utils/user';
+import useAuth from '@/presentation/store/use-auth';
 import { getUpdateAtLabel } from '@/utils/time';
 import { CommentType } from '@/application/enum/release';
 import styles from '@/presentation/page/detail/index.module.scss';
@@ -19,14 +20,14 @@ const ChildrenComment: FC<CommentProps> = (props) => {
     const { children, user: reviewUser, text, createTime, type, id, handleComment, replier } = props;
     const [isShowComment, setIsShowComment] = useState(false);
     const [inputValue, setInputValue] = useState('');
-    const user = getUser();
+    const { user } = useAuth();
     const reviewUsername = reviewUser?.cname || reviewUser?.username;
 
     const handleClick = () => {
         handleComment?.({
             type,
             text: inputValue,
-            username: user.username,
+            username: user?.username || '',
             id: +id,
             replier: reviewUsername,
         });
@@ -67,4 +68,4 @@ const ChildrenComment: FC<CommentProps> = (props) => {
     )
 };
 
-export default ChildrenComment;
+export default observer(ChildrenComment);

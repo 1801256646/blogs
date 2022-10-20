@@ -1,4 +1,11 @@
 .detail {
+    display: flex;
+    justify-content: space-between;
+
+    .detailCard {
+        width: 1000px;
+    }
+
     :global {
         .ant-comment-content-detail {
             color: rgba(0,0,0,.45);
@@ -8,6 +15,10 @@
         .ant-comment-content-author-name {
             color: rgba(0,0,0,.85);
             font-size: 14px;
+        }
+
+        .ant-card-head-title {
+            font-size: 28px;
         }
     }
 
@@ -19,7 +30,7 @@
     .image {
         display: flex;
         img {
-            width: 220px;
+            width: 180px;
             margin: 10px 10px 10px 0;
         }
     }
@@ -89,6 +100,44 @@
         font-size: 14px;
         font-weight: bold;
         color: #333;
+    }
+
+    img {
+        width: 700px;
+    }
+
+    .detailUser {
+        width: 335px;
+        height: 222px;
+        color: black;
+
+        .num {
+            font-weight: bold;
+        }
+
+        :global {
+            .ant-space {
+                color: black;
+            }
+        }
+
+        .focusBtn, .hasFocusBtn {
+            border-radius: 4px;
+            width: 122px;
+            height: 35px;
+            font-size: 14px;
+            justify-content: center;
+        }
+
+        .hasFocusBtn {
+            color: #8a919f;
+            background-color: #f2f3f5;
+            border: none;
+
+            &-hover {
+                border: none;
+            }
+        }
     }
 }
 

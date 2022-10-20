@@ -1,16 +1,17 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Space, Button, Avatar, Dropdown, Menu } from 'antd';
+import { PlusOutlined, FileTextOutlined, PictureOutlined } from '@ant-design/icons';
+import { Space, Button, Avatar, Dropdown, Menu, Popover } from 'antd';
 import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
-import { isLogin, getUser } from '@/utils/user';
+import { observer } from 'mobx-react';
+import useAuth from '@/presentation/store/use-auth';
 import Logo from './logo.png';
 import styles from '../index.module.scss';
 
 const Header: FC = () => {
     const history = useHistory();
-    const user = getUser();
-    const handleRelease = () => {
-        history.push('/release');
+    const { user, isLogin } = useAuth();
+    const handleRelease = (type: string) => {
+        history.push(`/release?type=${type}`);
     };
 
     const handleOff = () => {
@@ -33,9 +34,16 @@ const Header: FC = () => {
             </Space>
 
             <Space size={20}>
-                <Button icon={<PlusOutlined />}  className={styles.release} onClick={handleRelease}>发表</Button>
+                <Popover placement='bottom' content={(
+                    <Menu>
+                        <Menu.Item onClick={() => handleRelease('tips')}><Space><PictureOutlined />发帖子</Space></Menu.Item>
+                        <Menu.Item onClick={() => handleRelease('essay')}><Space><FileTextOutlined />发文章</Space></Menu.Item>
+                    </Menu>
+                )}>
+                    <Button icon={<PlusOutlined />} className={styles.release} type='primary'>发表</Button>
+                </Popover>
                 {
-                    isLogin()
+                    isLogin
                         ? (
                             <Dropdown overlay={(
                                 <Menu>
@@ -43,8 +51,8 @@ const Header: FC = () => {
                                     <Menu.Item onClick={handleOff}>退出登陆</Menu.Item>
                                 </Menu>
                             )}>
-                                <Avatar size={40} className={styles.avatar} src={user.avatar}>{(user?.cname?.[0] || user?.username?.[0]).toLocaleUpperCase()}</Avatar>
-                        </Dropdown>
+                                <Avatar size={40} className={styles.avatar} src={user?.avatar}>{(user?.cname?.[0] || user?.username?.[0] || 'U').toLocaleUpperCase()}</Avatar>
+                            </Dropdown>
                         )
                         : <Button className={styles.login} onClick={() => history.push('/login')}>登陆</Button>
                 }
@@ -53,4 +61,4 @@ const Header: FC = () => {
     );
 };
 
-export default Header;
+export default observer(Header);

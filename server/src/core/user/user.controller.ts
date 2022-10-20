@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Query } from '@nestjs/common';
-import { CreateUser, UpdateDto } from './user.interface';
+import { CreateUser, UpdateDto, UserFocus } from './user.interface';
 import { UserService } from './user.service';
 import { resultCode } from '@/common/utils/api-code';
 
@@ -9,7 +9,13 @@ export class UserController {
 
   @Get('/get-user')
   async getUser(@Query('username') username: string) {
-    const data = await this.userService.findNameOne(username);
+    const data = await this.userService
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.release', 'userRelease')
+      .leftJoinAndSelect('user.review', 'userReview')
+      .leftJoinAndSelect('user.reply', 'userReply')
+      .where('user.username = :username', { username })
+      .getOne();
     return resultCode({ data });
   }
 
@@ -29,8 +35,13 @@ export class UserController {
     return resultCode({ data });
   }
 
-  @Get('create')
+  @Get('/create')
   createUser() {
     return this.userService.create();
+  }
+
+  @Post('/focus')
+  async focus(@Body() body: UserFocus) {
+    return this.userService.focus(body);
   }
 }
