@@ -78,3 +78,11 @@ export const focusUser = async (data: FocusUserReq): Promise<CommonAPI<UserData>
     });
     return res.data;
 }
+
+// 获取10个用户信息
+export const authorList = async (): Promise<CommonAPI<UserData[]>> => {
+    const res = await request.get({
+        url: '/user',
+    });
+    return res.data;
+}

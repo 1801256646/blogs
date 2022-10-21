@@ -2,8 +2,10 @@
     margin-bottom: 10px;
     :global {
         .ant-comment-actions {
+            font-size: 12px;
+
             li {
-                margin-right: 6px;
+                margin-right: 16px;
             }
         }
     }

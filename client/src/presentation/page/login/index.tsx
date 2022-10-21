@@ -29,7 +29,8 @@ const Login: FC = () => {
                 } 
             },
             onError: (error) => {
-                message.error(error?.message);
+                console.log(error);
+                message.error(error as any);
             },
         }
     )

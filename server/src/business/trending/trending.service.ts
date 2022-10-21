@@ -27,8 +27,8 @@ export class TrendingService {
 
     const [list, total] = await query
       .orderBy(sort, 'DESC')
-      .offset(pageSize * (page - 1))
-      .limit(pageSize)
+      .skip(pageSize * (page - 1))
+      .take(pageSize)
       .getManyAndCount();
 
     return resultCode({

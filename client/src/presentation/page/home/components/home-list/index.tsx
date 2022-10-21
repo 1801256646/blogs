@@ -1,7 +1,7 @@
-import { ReadOutlined , LikeFilled, LikeOutlined } from '@ant-design/icons';
+import { ReadOutlined , LikeFilled, LikeOutlined, MessageOutlined } from '@ant-design/icons';
 import { Avatar, Tooltip, Comment, Typography, Space, message } from 'antd';
 import moment from 'moment';
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import { ReleaseData } from '@/application/service/home';
@@ -45,20 +45,24 @@ const HomeList: FC<{ release: ReleaseData }> = (props) => {
         }
     }, [user]);
 
+    const commentSum = useMemo(() => release?.review?.reduce((pre, cur) => pre + 1 + cur.childReview.length, 0), [release]);
+
     const actions = [
-        <Tooltip key="comment-basic-like" title="关注">
-            <Space onClick={(e) => like(e)}>
-                {action === 'off' ? <LikeOutlined /> : <LikeFilled />}
-                <span className="comment-action">{likes}</span>
-            </Space>
-        </Tooltip>,
-        <Tooltip key="comment-basic-dislike" title="访问量">
-            <Space>
-                <ReadOutlined />
-                <span>{release.browse}</span>
-            </Space>
-        </Tooltip>,
-    ]
+        <Space onClick={(e) => like(e)} size={2}>
+            {action === 'off' ? <LikeOutlined /> : <LikeFilled />}
+            点赞
+            <span className="comment-action">{likes}</span>
+        </Space>,
+        <Space size={2}>
+            <ReadOutlined />浏览
+            <span>{release.browse}</span>
+        </Space>,
+        <Space onClick={(e) => like(e)} size={2}>
+            <MessageOutlined />
+            评论
+            <span className="comment-action">{commentSum}</span>
+        </Space>
+    ];
 
     return (
         <Comment

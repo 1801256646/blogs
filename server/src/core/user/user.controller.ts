@@ -20,8 +20,14 @@ export class UserController {
   }
 
   @Get('/')
-  getAll() {
-    return this.userService.findAll();
+  async getAll() {
+    const data = await this.userService
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.release', 'userRelease')
+      .leftJoinAndSelect('user.review', 'userReview')
+      .leftJoinAndSelect('user.reply', 'userReply')
+      .getMany();
+    return resultCode({ data });
   }
 
   @Post('/add')
