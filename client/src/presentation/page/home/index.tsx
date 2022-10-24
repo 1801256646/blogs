@@ -1,5 +1,5 @@
 import { useRequest } from 'ahooks';
-import { Card, Tabs, Spin, Button } from 'antd';
+import { Card, Tabs, Spin, Button, Empty } from 'antd';
 import React, { FC, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { getHomeList, ReleaseData } from '@/application/service/home';
@@ -56,11 +56,13 @@ const Home: FC = () => {
                         <TabPane key='focus' tab='关注量'></TabPane>
                     </Tabs>
                     <div className={styles.list}>
-                        {data?.map(item => (
-                            <Card key={item.id} className={styles.package} onClick={() => history.push(`/detail?id=${item.id}`)}>
-                                <HomeList release={item} />
-                            </Card>
-                        ))}
+                        {
+                            data?.length ? data?.map(item => (
+                                <Card key={item.id} className={styles.package} onClick={() => history.push(`/detail?id=${item.id}`)}>
+                                    <HomeList release={item} />
+                                </Card>
+                            )) : <Empty description={false} />
+                        }
                         {
                             (listData?.data?.total || 0) > data.length && (
                                 <Button
