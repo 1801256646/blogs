@@ -24,7 +24,7 @@ const { env } = process;
     TypeOrmModule.forRoot({
       username: env.DB_NAME,
       port: Number(env.DB_PORT),
-      host: env.DB_HOST,
+      host: '120.78.142.48',
       password: env.DB_PASSWORD,
       type: 'mysql',
       database: env.DB_DATABASE,

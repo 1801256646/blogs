@@ -45,26 +45,30 @@ export class ReleaseService extends TypeormHelperService<Release> {
         message: '发布的图片不能超过5张。',
       });
     }
-    const userEntity = await this.userService.findNameOne(creator);
-    if (!userEntity) {
-      return resultCode({
-        code: Code.API_ERROR,
-        message: '请登陆之后，再发布文章。',
+    try {
+      const userEntity = await this.userService.findNameOne(creator);
+      if (!userEntity) {
+        return resultCode({
+          code: Code.API_ERROR,
+          message: '请登陆之后，再发布文章。',
+        });
+      }
+      const approverEntity = await this.approverService.find();
+      await this.releaseRepository.insert({
+        ...releaseDto,
+        img,
+        createTime: new Date(),
+        updateTime: new Date(),
+        status: ReleaseStatus.UnApproval,
+        owner: approverEntity.owner,
+        focus: 0,
+        browse: 0,
+        user: userEntity,
       });
+      return resultCode();
+    } catch (err) {
+      return resultCode({ code: Code.API_ERROR, message: err });
     }
-    const approverEntity = await this.approverService.find();
-    await this.releaseRepository.insert({
-      ...releaseDto,
-      img,
-      createTime: new Date(),
-      updateTime: new Date(),
-      status: ReleaseStatus.UnApproval,
-      owner: approverEntity.owner,
-      focus: 0,
-      browse: 0,
-      user: userEntity,
-    });
-    return resultCode();
   }
 
   /**

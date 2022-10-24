@@ -219,7 +219,7 @@ const Detail: FC = () => {
                         <span className={styles.num}>{userData?.data?.userFanc?.length || 0}</span></Space>,
                     <Space direction='vertical' size={0}>
                         关注
-                        <span className={styles.num}>{userData?.data?.userFocus.length || 0}</span></Space>,
+                        <span className={styles.num}>{userData?.data?.userFocus?.length || 0}</span></Space>,
 
                 ]}>
                     <Space direction='vertical' style={{ textAlign: 'center', width: '100%' }}>
