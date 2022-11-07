@@ -1,11 +1,13 @@
-import client, { CommonAPI } from './request';
 import { ReleaseOrderBy } from '@/application/enum/release';
+import { ReleaseType, ReleaseStatus } from '@/application/enum/release';
+import client, { CommonAPI } from './request';
 import { UserData } from './user';
 
 export type getHomeListReq = {
     page: number;
     pageSize: number;
     orderBy?: ReleaseOrderBy;
+    username?: string;
 }
 export type getHomeListRes = {
     total: number;
@@ -25,6 +27,8 @@ export type ReleaseData = {
     review: ReviewData[];
     img?: string[];
     user?: UserData;
+    type: ReleaseType;
+    status?: ReleaseStatus;
 }
 
 export type ReviewData = {

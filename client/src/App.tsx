@@ -5,19 +5,21 @@ import Layout from './presentation/layout';
 import { router } from './router';
 import 'antd/dist/antd.min.css';
 
-const App = () => (
-    <Router history={getHistory()}>
-        <Switch>
-            {router.map((item) => {
-                const { component, ...reset } = item;
-                return (
-                    <Route {...reset} render={() => {
-                        return <Layout component={component} />
-                    }} />
-                )
-            })}
-        </Switch>
-    </Router>
-)
+const App = () => {
+    return (
+        <Router history={getHistory()}>
+            <Switch>
+                {router.map((item, index) => {
+                    const { component, ...reset } = item;
+                    return (
+                        <Route key={index} {...reset} render={() => {
+                            return <Layout component={component} />
+                        }} />
+                    )
+                })}
+            </Switch>
+        </Router>
+    );
+};
 
 export default App;

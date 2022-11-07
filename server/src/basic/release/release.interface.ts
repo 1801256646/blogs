@@ -11,6 +11,8 @@ export interface ReleaseDto {
   img?: string[];
 
   content: string;
+
+  type: number;
 }
 
 export interface ApproverDto {

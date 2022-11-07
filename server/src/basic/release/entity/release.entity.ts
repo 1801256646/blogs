@@ -14,16 +14,26 @@ export class Release {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ comment: '发布标题' })
+  @Column({ comment: '发布标题', charset: 'utf8mb4' })
   title: string;
 
-  @Column({ comment: '发布简介', nullable: true })
+  @Column({ comment: '发布简介', nullable: true, charset: 'utf8mb4' })
   description: string;
 
-  @Column({ nullable: true, comment: '发布图片', type: 'simple-array' })
+  @Column({
+    nullable: true,
+    comment: '发布图片',
+    type: 'simple-array',
+    charset: 'utf8mb4',
+  })
   img: string[];
 
-  @Column({ nullable: true, comment: '发布内容', type: 'mediumtext' })
+  @Column({
+    nullable: true,
+    comment: '发布内容',
+    type: 'mediumtext',
+    charset: 'utf8mb4',
+  })
   content: string;
 
   @Column({ name: 'create-time', comment: '创建时间' })
@@ -32,13 +42,13 @@ export class Release {
   @Column({ name: 'update-time', comment: '更新时间' })
   updateTime: Date;
 
-  @Column({ comment: '创建人' })
+  @Column({ comment: '创建人', charset: 'utf8mb4' })
   creator: string;
 
   @Column({ comment: '状态' })
   status: number;
 
-  @Column({ comment: '审批人' })
+  @Column({ comment: '审批人', charset: 'utf8mb4' })
   owner: string;
 
   @Column({ comment: '点赞量' })
@@ -46,6 +56,9 @@ export class Release {
 
   @Column({ comment: '访问量' })
   browse: number;
+
+  @Column({ comment: '发布类型' })
+  type: number;
 
   @OneToMany(() => Review, (entity) => entity.release)
   @JoinColumn({ name: 'revoew_id' })

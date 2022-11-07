@@ -68,7 +68,7 @@ export class FocusService {
   async browse(releaseId: number) {
     const releaseEntity = await this.releaseService.findOne(releaseId);
     const updateEntity = await this.releaseService.update(releaseId, {
-      browse: releaseEntity.data.browse + 1,
+      browse: (releaseEntity.data.browse || 0) + 1,
     });
     return resultCode({ data: updateEntity });
   }

@@ -40,6 +40,11 @@ export class HttpClient {
         const query = qs.stringify(data);
         return request.get(`${url}?${query}`);
     }
+    delete<T>(dto: Request<T>) {
+        const { data, url } = dto;
+        const query = qs.stringify(data);
+        return request.delete(`${url}?${query}`);
+    } 
 }
 const client = new HttpClient();
 export default client;

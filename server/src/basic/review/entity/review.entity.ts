@@ -18,7 +18,7 @@ export class Review {
   @Column()
   username: string;
 
-  @Column({ comment: '评论' })
+  @Column({ comment: '评论', charset: 'utf8mb4' })
   text: string;
 
   @OneToMany(() => Reply, (entity) => entity.childReview)

@@ -1,11 +1,13 @@
 import { useRequest } from 'ahooks';
 import { Card, Tabs, Spin, Button, Empty } from 'antd';
+import { observer } from 'mobx-react';
 import React, { FC, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { ReleaseOrderBy } from '@/application/enum/release';
 import { getHomeList, ReleaseData } from '@/application/service/home';
 import { authorList } from '@/application/service/user';
-import { ReleaseOrderBy } from '@/application/enum/release';
 import BodyScreen from '@/presentation/components/body-screen';
+import useAuth from '@/presentation/store/use-auth';
 import HomeList from './components/home-list';
 import Leaderboard from './components/leaderboard';
 import styles from './index.module.scss';
@@ -17,6 +19,7 @@ let tab = ReleaseOrderBy.UpdateTime;
 const Home: FC = () => {
     const history = useHistory();
     const location = useLocation();
+    const { user, isLogin } = useAuth();
     const searchParams = new URLSearchParams(location.search);
     const urlTab = searchParams.get('tab') as ReleaseOrderBy || ReleaseOrderBy.UpdateTime;
     const [orderBy, setOrderBy] = useState(urlTab);
@@ -26,11 +29,13 @@ const Home: FC = () => {
         page: pagination.page,
         pageSize: pagination.pageSize,
         orderBy: orderBy,
+        username: orderBy === ReleaseOrderBy.UserFocus ? user?.username : undefined,
     }), {
+        ready: orderBy === ReleaseOrderBy.UserFocus ? !!user?.username : true,
         refreshDeps: [orderBy, pagination],
         onSuccess: (dataList) => {
             if (tab === orderBy) {
-                setData([...data, ...dataList?.data?.list]);
+                setData([...data, ...dataList?.data?.list || []]);
             } else {
                 setData(dataList?.data?.list);
                 tab = orderBy;
@@ -50,18 +55,21 @@ const Home: FC = () => {
         <BodyScreen>
             <Spin spinning={loading && authorListLoading}>
                 <div className={styles.home}>
-                    <Tabs tabPosition='left' className={styles.leftTabs} onChange={handleTabsChange} defaultActiveKey={urlTab}>
-                        <TabPane key='updateTime' tab='最新发布'></TabPane>
-                        <TabPane key='browse' tab='浏览量'></TabPane>
-                        <TabPane key='focus' tab='关注量'></TabPane>
-                    </Tabs>
+                    <div>
+                        <Tabs tabPosition='left' onChange={handleTabsChange} className={styles.leftTabs} activeKey={orderBy}>
+                            <TabPane key='updateTime' tab='最新发布'></TabPane>
+                            <TabPane key='browse' tab='浏览量'></TabPane>
+                            <TabPane key='focus' tab='点赞量'></TabPane>
+                            {isLogin && <TabPane key='userFocus' tab='关注的人'></TabPane>}
+                        </Tabs>
+                    </div>
                     <div className={styles.list}>
                         {
                             data?.length ? data?.map(item => (
                                 <Card key={item.id} className={styles.package} onClick={() => history.push(`/detail?id=${item.id}`)}>
                                     <HomeList release={item} />
                                 </Card>
-                            )) : <Empty description={false} />
+                            )) : <Card><Empty description='当前暂无发布内容'  /></Card>
                         }
                         {
                             (listData?.data?.total || 0) > data.length && (
@@ -76,7 +84,6 @@ const Home: FC = () => {
                                 </Button>
                             )
                         }
-                        
                     </div>
                     <Leaderboard list={authorListData?.data} />
                 </div>
@@ -85,4 +92,4 @@ const Home: FC = () => {
     );
 };
 
-export default Home;
+export default observer(Home);

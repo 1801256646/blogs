@@ -1,121 +1,182 @@
+import { UserOutlined } from '@ant-design/icons'
 import { useRequest } from 'ahooks';
-import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Form, Input, message, Tabs, Upload } from 'antd';
-import React, { FC, useEffect, useState } from 'react';
-import type { UploadProps } from 'antd/es/upload';
+import { Card, Space, Spin, Avatar, message, Tabs, Empty } from 'antd';
+import TabPane from 'antd/lib/tabs/TabPane';
 import { observer } from 'mobx-react';
-import { UpdateUser, getUserInfo } from '@/application/service/user';
+import React, { FC } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
+import { ReleaseType } from '@/application/enum/release';
+import { UserFancFocus } from '@/application/enum/user'
+import { getIdRelease, getAllRelease, removeRelease } from '@/application/service/release';
+import { getUserInfo, getIdsUser, focusUser } from '@/application/service/user';
 import BodyScreen from '@/presentation/components/body-screen';
 import useAuth from '@/presentation/store/use-auth';
+import HomeList from '../home/components/home-list';
+import UserCard from './components/focus-fans';
+import RemoveRelease from './components/remove-release';
 import styles from './index.module.scss';
 
-const { TabPane } = Tabs;
-
 const User: FC = () => {
-    const { user } = useAuth();
-    const [form] = Form.useForm();
-    const [userForm] = Form.useForm();
-    const [fileUrl, setFileUrl] = useState<string>('');
+    const { id } = useParams<{ id: string }>();
+    const { user, loginUser } = useAuth();
+    const history = useHistory();
+    
+    const { loading, data: userData, run: getUserRun } = useRequest(() => getUserInfo(id), {
+        refreshDeps: [id],
+        ready: !!id,
+        onSuccess: () => {
+            fancRun();
+            focusRun();
+            releaseListRun();
+        }
+    });
 
-    const { run: updateUserRun, loading } = useRequest(UpdateUser, {
+    const { loading: fancLoading, data: fancData, run: fancRun } = useRequest(() => getIdsUser(userData?.data?.userFanc || []), {
+        ready: `${userData?.data?.id}` === id,
+        refreshDeps: [id],
+        manual: true,
+    });
+
+    const { loading: focusLoading, data: focusData, run: focusRun } = useRequest(() => getIdsUser(userData?.data?.userFocus || []), {
+        ready: `${userData?.data?.id}` === id,
+        refreshDeps: [id],
+        manual: true,
+    });
+
+    const { run: focusUserRun, loading: focusBtnLoading } = useRequest(focusUser, {
         manual: true,
         onSuccess: () => {
-            message.success('修改成功');
+            loginUser();
+            getUserRun();
+        },
+    })
+
+    const { loading: releaseListLoading, data: releaseListData, run: releaseListRun } = useRequest(() => getIdRelease(userData?.data?.release?.map(item => item.id) || []), {
+        ready: `${userData?.data?.id}` === id,
+        refreshDeps: [id],
+        manual: true,
+    });
+
+    const { data: allReleaseData, run: allReleaseDataRun } = useRequest(() => getAllRelease(), {
+        ready: !!user?.admin,
+    });
+
+    const { loading: removeLoading, run: removeReleaseRun } = useRequest(removeRelease, {
+        ready: !!user?.admin,
+        manual: true,
+        onSuccess: () => {
+            allReleaseDataRun();
         },
     });
 
-    const { data } = useRequest(() => getUserInfo(user?.username || ''), {
-       ready: !!user?.username,
-    });
-
-    const handleChange: UploadProps['onChange'] = (info) => { 
-        if (info.file.status === 'done') {
-            setFileUrl(info.file.response.data.url);
-        };
-    };
-
-    const handleFinish = (value: Record<string, string>) => {
-        const { cname, description } = value;
-        updateUserRun({
-            username: user?.username,
-            cname,
-            description,
-            avatar: fileUrl,
+    const handleFocusClick = (id: number) => {
+        if (!user?.username) {
+            message.info('请先登陆');
+            setTimeout(() => history.push('/login'), 1000);
+        }
+        focusUserRun({
+            userId: `${user?.id}`,
+            userFocus: `${id}`,
         });
     };
 
-    const handleUserFinish = (value: Record<string, string>) => {
-        const { username, password } = value;
-        updateUserRun({
-            password,
-            username,
-        });
-    };
-
-    useEffect(() => {
-        if (data) {
-            form.setFieldsValue({
-                ...data?.data,
-             })
-            setFileUrl(data?.data?.avatar);
-            userForm.setFieldsValue({
-                username: data?.data?.username,
-            });
-        };
-    }, [data]);
+    const tipsList = releaseListData?.data?.list?.filter(item => item.type === ReleaseType.Tips);
+    const articleList = releaseListData?.data?.list?.filter(item => item.type === ReleaseType.Article);
 
     return (
-        <BodyScreen className={styles.user}>
-            <Tabs tabPosition='left'>
-                <TabPane tab='个人资料' key='info'>
-                    <Card title='个人资料'>
-                        <Form
-                            labelCol={{ span: 3 }}
-                            wrapperCol={{ span: 18 }}
-                            form={form}
-                            onFinish={handleFinish}
-                        >
-                            <Form.Item label='头像'>
-                                <Upload
-                                    action={`${window.location.origin}/api/upload`}
-                                    accept='.png, .webp, .jpg, .gif, .jpeg'
-                                    onChange={handleChange}
-                                >
-                                    <Avatar size={180} src={fileUrl} icon={<UserOutlined />} />
-                                </Upload>
-                            </Form.Item>
-                            <Form.Item label='昵称' name='cname'>
-                                <Input placeholder='请输入昵称' />
-                            </Form.Item>
-                            <Form.Item label='个人签名' name='description'>
-                                <Input.TextArea placeholder='请输入个人签名' />
-                            </Form.Item>
-                            <Form.Item label='个人主页' name='gitAddress'>
-                                <Input placeholder='请输入个人主页' />
-                            </Form.Item>
-                            <Button type='primary' htmlType='submit' className={styles.submitBtn} loading={loading}>保存</Button>
-                        </Form>
-                    </Card>
-                </TabPane>
-                <TabPane tab='账号信息' key='user'>
-                    <Card title='账号信息'>
-                        <Form
-                            labelCol={{ span: 3 }}
-                            wrapperCol={{ span: 18 }}
-                            form={userForm}
-                            onFinish={handleUserFinish}
-                        >
-                            <Form.Item name='username' label='用户名'>
-                                <Input placeholder='请输入用户名' disabled />
-                            </Form.Item>
-                            <Form.Item name='password' label='密码'>
-                                <Input.Password placeholder='请输入密码'/>
-                            </Form.Item>
-                            <Button type='primary' htmlType='submit' className={styles.submitBtn} loading={loading}>保存</Button>
-                        </Form>
-                    </Card>
-                </TabPane>
-            </Tabs>
+        <BodyScreen style={styles.user}>
+            <Spin spinning={loading || fancLoading || focusLoading}>
+                <div className={styles.userHeader}>
+                    <div className={styles.userLogo}>
+                        <Avatar
+                            icon={<UserOutlined />}
+                            src={userData?.data?.avatar}
+                            shape='circle'
+                            size={70}
+                            onClick={() => `${user?.id}` === id && history.push('/user-setting')}
+                        />
+                        <Space direction='vertical' size={8}>
+                            <h4>{userData?.data?.cname || userData?.data?.username}</h4>
+                            <span>{userData?.data?.description}</span>
+                        </Space >
+                    </div>
+                </div>
+                <div className={styles.detailUser}>
+                    <Space direction='vertical' size={20} className={styles.detailUserLeft}>
+                        <Card className={styles.userInfo} actions={[
+                            <Space direction='vertical' size={0}>
+                                话题
+                                <span className={styles.num}>{userData?.data?.release?.length || 0}</span>
+                            </Space>,
+                            <Space direction='vertical' size={0}>
+                                评论
+                                <span className={styles.num}>{(userData?.data?.reply?.length || 0) + (userData?.data?.review?.length || 0)}</span>
+                            </Space>,
+                            <Space direction='vertical' size={0}>
+                                关注
+                                <span className={styles.num}>{userData?.data?.userFocus?.length || 0}</span>
+                            </Space>,
+                            <Space direction='vertical' size={0}>
+                                注册排名
+                                <span className={styles.num}>{userData?.data?.id}</span>
+                            </Space>,
+
+                        ]}>
+                            <h3>个人成就</h3>
+                        </Card>
+                        <UserCard
+                            type={UserFancFocus.Fanc}
+                            list={fancData?.data?.list}
+                            handleFocusClick={handleFocusClick}
+                            focusBtnLoading={fancLoading}
+                            user={user}
+                        />
+                        <UserCard
+                            type={UserFancFocus.Focus}
+                            list={focusData?.data?.list}
+                            handleFocusClick={handleFocusClick}
+                            focusBtnLoading={focusBtnLoading}
+                            user={user}
+                        />
+                    </Space>
+                    <Tabs>
+                        <TabPane key={'tips'} tab='帖子'>
+                            <Spin spinning={releaseListLoading}>
+                                {
+                                    tipsList?.length ? tipsList?.map(item => (
+                                        <Card key={item.id} className={styles.package} onClick={() => history.push(`/detail?id=${item.id}`)}>
+                                            <HomeList release={item} />
+                                        </Card>
+                                    )) : <Card><Empty description='当前暂无发布内容' /></Card>
+                                }
+                            </Spin>
+                        </TabPane>
+                        <TabPane key={'article'} tab='文章'>
+                            <Spin spinning={releaseListLoading}>
+                                {
+                                    articleList?.length ? articleList?.map(item => (
+                                        <Card key={item.id} className={styles.package} onClick={() => history.push(`/detail?id=${item.id}`)}>
+                                            <HomeList release={item} />
+                                        </Card>
+                                    )) : <Card><Empty description='当前暂无发布内容' /></Card>
+                                }
+                            </Spin>
+                        </TabPane>
+                        {
+                            user?.admin && (
+                                <TabPane key={'admin'} tab='下架'>
+                                    <RemoveRelease
+                                        handleRemove={removeReleaseRun}
+                                        loading={removeLoading}
+                                        dataSource={allReleaseData?.data}
+                                    />
+                                </TabPane>
+                            )
+                        }
+                    </Tabs>
+                </div>
+            </Spin>
+            
         </BodyScreen>
     );
 };

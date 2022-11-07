@@ -2,8 +2,8 @@ import { useRequest } from 'ahooks';
 import { Card, Form, Input, Button, message } from 'antd';
 import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
-import { rule } from '@/types/user';
 import { RegisterUser } from '@/application/service/user';
+import { rule } from '@/types/user';
 import styles from './index.module.scss';
 
 const Register: FC = () => {

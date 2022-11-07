@@ -16,8 +16,8 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   async upload(@UploadedFile() file) {
     const port = this.configService.get('global.port');
-    const host = this.configService.get('global.ip');
-    file.url = `http://${port}:${host}/public/uploads/${file.filename}`;
+    const host = this.configService.get('global.host');
+    file.url = `http://${host}:${port}/public/uploads/${file.filename}`;
     return resultCode({ data: file });
   }
 }

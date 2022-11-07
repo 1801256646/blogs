@@ -1,45 +1,110 @@
-.user {
-    :global {
-        .ant-tabs-nav-list {
-            background-color: #fff;
-            padding: 10px ;
-        }
+.userHeader {
+    background: url('http://127.0.0.1:8080/public/uploads/1667269862317.jpeg');
+    background-size: 100% 100%;
+    height: 250px;
+    display: flex;
+    align-items: flex-end;
 
-        .ant-tabs-tab {
-            margin: 0 !important;
-            padding-right: 130px !important;
-        }
+    .userLogo {
+        width: 100%;
+        background-color: rgba(255, 255, 255, .5);
+        display: flex;
+        align-items: center;
+        padding: 20px;
 
-        .ant-tabs-tab-active {
-            background: rgba(24,144,255, .1);
+        :global(.ant-space) {
+            margin-left: 10px;
         }
+    }
+}
 
-        .ant-tabs-ink-bar {
-            display: none;
-        }
+.detailUser {
+    display: flex;
+    margin-top: 20px;
 
-        .ant-form-item-label {
-            font-weight: bold;
-            
-            label {
-                font-size: 16px;
+    .userInfo {
+        width: 350px;
+
+        :global {
+            .ant-card-body {
+                padding: 15px !important;
             }
-        }
 
-        .ant-upload-list-text {
-            display: none;
-        }
+            .ant-divider {
+                margin: 12px 0 10px;
+            }
 
-        .ant-card {
-            min-height: 539px;
+            .ant-list-item-meta-content, .ant-list-item-meta-description {
+                font-size: 12px;
+            }
+
+            .ant-list-item-meta-title {
+                font-size: 12px;
+                margin-bottom: 0;
+            }
+
+            .ant-avatar {
+                width: 37px !important;
+                height: 37px !important;
+            }
         }
     }
 
-    .submitBtn {
+    .empty {
+        height: 70px;
+        line-height: 70px;
+        text-align: center;
+        color: rgba(0, 0, 0, .5);
+    }
+
+    .moreBtn {
+        width: 100px;
+        border-radius: 5px;
         display: block;
-        width: 120px;
-        height: 40px;
-        font-size: 16px;
-        margin: 0 auto;
+        margin: 10px auto;
+    }
+
+    .focusBtn {
+        text-align: center;
+        width: 70px;
+        height: 28px;
+        padding: 0;
+        border-radius: 4px;
+    }
+
+    .hasFocusBtn {
+        color: #8a919f;
+        background-color: #f2f3f5;
+        border: none;
+
+        &-hover {
+            border: none;
+            color: #8a919f;
+            background-color: #f2f3f5 !important;
+        }
+        :global(.ant-btn) {
+            &-hover {
+                color: #8a919f;
+                background: #f2f3f5 !important;
+            }
+        } 
+    }
+
+    .detailUserLeft {
+        margin-right: 20px;
+    }
+
+    .package {
+        margin-bottom: 10px;
+
+        &:hover {
+            background-color: #f6f6f7;
+        }
+    }
+
+    :global {
+        .ant-tabs {
+            flex: 1;
+        }
     }
 }

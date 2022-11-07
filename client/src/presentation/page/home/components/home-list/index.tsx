@@ -1,9 +1,9 @@
 import { ReadOutlined , LikeFilled, LikeOutlined, MessageOutlined } from '@ant-design/icons';
 import { Avatar, Tooltip, Comment, Typography, Space, message } from 'antd';
+import { observer } from 'mobx-react';
 import moment from 'moment';
 import React, { FC, useState, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
-import { observer } from 'mobx-react';
 import { ReleaseData } from '@/application/service/home';
 import { focusRelease } from '@/application/service/release';
 import useAuth from '@/presentation/store/use-auth';
@@ -69,14 +69,23 @@ const HomeList: FC<{ release: ReleaseData }> = (props) => {
             actions={actions}
             className={styles.homeList}
             author={release.user?.cname || release.user?.username}
-            avatar={<Avatar size={40} src={release.user?.avatar}>{(user?.username?.[0] || 'u').toLocaleUpperCase()}</Avatar>}
+            avatar={<Avatar
+                size={40}
+                src={release.user?.avatar}
+                onClick={(e) => {
+                    e?.stopPropagation();
+                    history.push(`/user/${release.user?.id}`)
+                }}
+            >
+                {(user?.username?.[0] || 'u').toLocaleUpperCase()}
+            </Avatar>}
             content={
                 <div>
                     <p className={styles.title}>{release.title}</p>
                     <Paragraph ellipsis={{ rows: 3 }} className={styles.content}>{release.content}</Paragraph>
                     <div className={styles.homeListImage}>
-                        {release?.img?.map(item => (
-                            <img alt='' src={item} />
+                        {release?.img?.map((item, index) => (
+                            <img alt='' src={item} key={index} />
                         ))}
                     </div>
                 </div>

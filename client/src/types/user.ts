@@ -12,6 +12,10 @@ export const rule = {
             required: true,
             message: '用户名不能为空'
         },
+        {
+            pattern: /^\w+$/,
+            message: '用户名由字母、数字、下划线组成'
+        },
     ],
     password: [
         {
@@ -26,6 +30,10 @@ export const rule = {
             required: true,
             message: '密码不能为空'
         },
+        {
+            pattern: /^[^\u4e00-\u9fa5]+$/,
+            message: '密码由数字，字母，下划线组成'
+        }
     ],
     cname: [
         {

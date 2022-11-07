@@ -10,13 +10,13 @@ export class Reply {
   @Column()
   username: string;
 
-  @Column({ comment: '评论' })
+  @Column({ comment: '评论', charset: 'utf8mb4' })
   text: string;
 
   @Column({ name: 'create_time' })
   createTime: Date;
 
-  @Column({ comment: '回复人', nullable: true })
+  @Column({ comment: '回复人', nullable: true, charset: 'utf8mb4' })
   replier: string;
 
   @ManyToOne(() => Review, (entity) => entity.childReview)

@@ -1,6 +1,6 @@
 import { Layout } from 'antd'
-import React, { FC, useEffect } from 'react';
 import { observer } from 'mobx-react';
+import React, { FC, useEffect } from 'react';
 import useAuth from '../store/use-auth';
 import AppHeader from './header';
 import styles from './index.module.scss';

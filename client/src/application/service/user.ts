@@ -1,5 +1,5 @@
-import request, { CommonAPI } from './request';
 import { ReleaseData, ReviewData, ReplyData } from './home';
+import request, { CommonAPI } from './request';
 
 export interface LoginUserReq {
     username: string;
@@ -25,6 +25,8 @@ export type UserData = {
     reply?: ReplyData[];
     userFanc: string[];
     userFocus: string[];
+    gitAddress?: string;
+    admin?: number;
 }
 
 export type UpdateUserReq = Partial<UserData>;
@@ -32,6 +34,15 @@ export type UpdateUserReq = Partial<UserData>;
 export type FocusUserReq = {
     userId: string;
     userFocus: string;
+}
+
+export type GetIdsUserReq = {
+    users: string[];
+}
+
+export type GetIdsUserRes = {
+    total: number;
+    list: UserData[];
 }
 
 // 登陆当前用户
@@ -53,10 +64,10 @@ export const RegisterUser = async (data: RegisterUserReq): Promise<CommonAPI> =>
 };
 
 // 获取用户信息
-export const getUserInfo = async (username: string): Promise<CommonAPI<UserData>> => {
+export const getUserInfo = async (id: string): Promise<CommonAPI<UserData>> => {
     const res = await request.get({
         url: '/user/get-user',
-        data: { username },
+        data: { id },
     });
     return res.data;
 };
@@ -79,10 +90,19 @@ export const focusUser = async (data: FocusUserReq): Promise<CommonAPI<UserData>
     return res.data;
 }
 
-// 获取10个用户信息
+// 获取3个用户信息
 export const authorList = async (): Promise<CommonAPI<UserData[]>> => {
     const res = await request.get({
         url: '/user',
+    });
+    return res.data;
+}
+
+// 通过id获取多个用户信息
+export const getIdsUser = async (users: string[]): Promise<CommonAPI<GetIdsUserRes>> => {
+    const res = await request.post({
+        url: '/user',
+        data: { users },
     });
     return res.data;
 }

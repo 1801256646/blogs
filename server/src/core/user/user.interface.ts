@@ -16,6 +16,8 @@ export interface UpdateDto extends Partial<CreateUser> {
   userFocus?: number[];
 
   userFanc?: number[];
+
+  gitAddress?: string;
 }
 
 export interface UserFocus {

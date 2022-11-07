@@ -17,4 +17,8 @@ export class ApproverService {
       },
     });
   }
+
+  async findAll() {
+    return await this.approverRepository.find();
+  }
 }

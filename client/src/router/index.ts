@@ -1,10 +1,11 @@
 import { RouteConfig } from 'react-router-config'
+import Detail from '@/presentation/page/detail';
 import Home from '@/presentation/page/home';
 import Login from '@/presentation/page/login';
 import Register from '@/presentation/page/register';
 import Release from '@/presentation/page/release';
-import Detail from '@/presentation/page/detail';
 import User from '@/presentation/page/user';
+import UserSetting from '@/presentation/page/user-setting';
 
 export const router: RouteConfig[] = [
     {
@@ -29,7 +30,11 @@ export const router: RouteConfig[] = [
         component: Detail,
     },
     {
-        path: '/user',
-        component: User,
+        path: '/user-setting',
+        component: UserSetting,
     },
+    {
+        path: '/user/:id',
+        component: User
+    }
 ];

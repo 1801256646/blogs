@@ -1,11 +1,11 @@
 import { PlusOutlined, FileTextOutlined, PictureOutlined } from '@ant-design/icons';
 import { Space, Button, Avatar, Dropdown, Menu, Popover } from 'antd';
+import { observer } from 'mobx-react';
 import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
-import { observer } from 'mobx-react';
 import useAuth from '@/presentation/store/use-auth';
-import Logo from './logo.png';
 import styles from '../index.module.scss';
+import Logo from './logo.png';
 
 const Header: FC = () => {
     const history = useHistory();
@@ -23,7 +23,11 @@ const Header: FC = () => {
     };
 
     const handleEditData = () => { 
-        history.push('/user');
+        history.push('/user-setting');
+    };
+
+    const handleUser = () => {
+        history.push(`/user/${user?.id}`);
     };
 
     return (
@@ -47,6 +51,7 @@ const Header: FC = () => {
                         ? (
                             <Dropdown overlay={(
                                 <Menu>
+                                    <Menu.Item onClick={handleUser}>个人中心</Menu.Item>
                                     <Menu.Item onClick={handleEditData}>编辑资料</Menu.Item>
                                     <Menu.Item onClick={handleOff}>退出登陆</Menu.Item>
                                 </Menu>

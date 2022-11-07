@@ -1,11 +1,11 @@
 import { useRequest } from 'ahooks';
 import { Card, Form, Input, Button, message } from 'antd';
+import { observer } from 'mobx-react';
 import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
-import { observer } from 'mobx-react';
-import { rule } from '@/types/user';
 import { LoginUser } from '@/application/service/user';
 import useAuth from '@/presentation/store/use-auth';
+import { rule } from '@/types/user';
 import styles from './index.module.scss';
 
 const Login: FC = () => {

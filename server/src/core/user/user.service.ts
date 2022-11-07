@@ -5,12 +5,14 @@ import { Repository } from 'typeorm';
 import { TypeormHelperService } from '@/common/typeorm-helper/typeorm-helper.service';
 import { User } from './entity/user.entity';
 import { CreateUser, UpdateDto, UserFocus } from './user.interface';
+import { PasswordService } from '../password/password.service';
 
 @Injectable()
 export class UserService extends TypeormHelperService<User> {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private passwordService: PasswordService,
   ) {
     super(userRepository);
   }
@@ -32,23 +34,32 @@ export class UserService extends TypeormHelperService<User> {
     });
   }
 
-  async findNameOne(name: string) {
-    if (!name) return;
-    return await this.userRepository.findOne({
-      where: {
-        username: name,
-      },
-    });
+  async findNameOne(username: string) {
+    if (!username) return;
+    const data = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.release', 'userRelease')
+      .leftJoinAndSelect('user.review', 'userReview')
+      .leftJoinAndSelect('user.reply', 'userReply')
+      .where('user.username = :username', { username })
+      .getOne();
+    return data;
   }
 
   async add(user: CreateUser) {
-    const entity = await this.findNameOne(user.username);
+    const { password, username, cname } = user;
+    const entity = await this.findNameOne(username);
     if (entity) {
       return resultCode({ message: '用户名已存在', code: Code.API_ERROR });
     }
     const list = await this.userRepository.insert({
-      ...user,
+      username,
+      cname,
       createTime: new Date(),
+    });
+    await this.passwordService.add({
+      username,
+      password,
     });
     if (list) {
       return resultCode();

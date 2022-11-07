@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
 import classnames from 'classnames';
+import React, { FC } from 'react';
 import styles from './index.module.scss';
 
 export interface BodyScreenProps {

@@ -4,4 +4,6 @@ export interface HomeListDto {
   pageSize: number;
 
   orderBy?: string;
+
+  username?: string;
 }

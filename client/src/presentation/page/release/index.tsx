@@ -1,15 +1,16 @@
-import { useRequest } from 'ahooks';
 import { PlusOutlined } from '@ant-design/icons';
+import { useRequest } from 'ahooks';
 import { Card, Form, Input, Button, message, Upload, UploadFile, Space } from 'antd';
-import type { UploadProps } from 'antd/es/upload';
+import { observer } from 'mobx-react';
 import React, { FC, useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { observer } from 'mobx-react';
+import { ReleaseType } from '@/application/enum/release';
+import { ReleasePost, ReleasePostReq } from '@/application/service/release';
 import BodyScreen from '@/presentation/components/body-screen';
 import useAuth from '@/presentation/store/use-auth';
-import { ReleasePost, ReleasePostReq } from '@/application/service/release';
 import MarketDown from './components/marketdown';
 import styles from './index.module.scss';
+import type { UploadProps } from 'antd/es/upload';
 
 const Release: FC = () => {
     const history = useHistory();
@@ -36,6 +37,7 @@ const Release: FC = () => {
             ...value,
             creator: user?.username || '',
             img: fileList.map(item => item.response.data.url),
+            type: ReleaseType.Tips,
         });
     };
 
@@ -45,6 +47,7 @@ const Release: FC = () => {
             content: contentValue,
             username: user?.username || '',
             title: inputValue,
+            type: ReleaseType.Article
         });
     };
 
@@ -53,13 +56,13 @@ const Release: FC = () => {
     };
 
     useEffect(() => {
-        if (!isLogin) {
+        if (!localStorage.getItem('user')) {
             message.info('请先登陆');
             setTimeout(() => {
                 history.push('/login');
             }, 1000);
         };
-    }, []);
+    }, [isLogin]);
 
     return (
         <BodyScreen>

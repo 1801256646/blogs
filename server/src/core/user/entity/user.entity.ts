@@ -8,13 +8,10 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 16 })
+  @Column({ length: 16, charset: 'utf8mb4' })
   username: string;
 
-  @Column({ length: 16 })
-  password: string;
-
-  @Column({ length: 16 })
+  @Column({ length: 16, charset: 'utf8mb4' })
   cname: string;
 
   @Column({ name: 'create_time', nullable: true })
@@ -30,10 +27,11 @@ export class User {
     comment: '简介',
     default: '这家伙很懒，啥也没留下。',
     nullable: true,
+    charset: 'utf8mb4',
   })
   description: string;
 
-  @Column({ comment: '头像', nullable: true })
+  @Column({ comment: '头像', nullable: true, charset: 'utf8mb4' })
   avatar: string;
 
   @OneToMany(() => Release, (release) => release.user)
@@ -50,4 +48,10 @@ export class User {
 
   @Column({ comment: '关注的人', nullable: true, type: 'simple-array' })
   userFocus: number[];
+
+  @Column({ comment: '个人主页', nullable: true, charset: 'utf8mb4' })
+  gitAddress: string;
+
+  @Column({ comment: '是否是超管', nullable: true })
+  admin: number;
 }

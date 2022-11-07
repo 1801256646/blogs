@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { CoreModule } from '@/core/core.module';
 import { BusinessModule } from '@/business/business.module';
 import { BasicModule } from '@/basic/basic.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import { global } from './config';
 import databaseConfig from './config/database';
 
@@ -18,13 +19,14 @@ const { env } = process;
       load: [global, databaseConfig],
       envFilePath: ['.env'],
     }),
+    ScheduleModule.forRoot(),
     CoreModule,
     BusinessModule,
     BasicModule,
     TypeOrmModule.forRoot({
       username: env.DB_NAME,
       port: Number(env.DB_PORT),
-      host: '120.78.142.48',
+      host: '0.0.0.0',
       password: env.DB_PASSWORD,
       type: 'mysql',
       database: env.DB_DATABASE,

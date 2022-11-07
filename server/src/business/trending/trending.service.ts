@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { ReleaseService } from '@/basic/release/release.service';
+import { UserService } from '@/core/user/user.service';
 import { HomeListDto } from './trending.interface';
 import { resultCode } from '@/common/utils/api-code';
 
 @Injectable()
 export class TrendingService {
-  constructor(private releaseService: ReleaseService) {}
+  constructor(
+    private releaseService: ReleaseService,
+    private userService: UserService,
+  ) {}
 
   async home(dto: HomeListDto) {
-    const { page, pageSize, orderBy } = dto;
+    const { page, pageSize, orderBy, username } = dto;
     let sort = 'release.updateTime';
     if (orderBy === 'browse') {
       sort = 'release.browse';
@@ -23,7 +27,27 @@ export class TrendingService {
       .leftJoinAndSelect('review.childReview', 'childReview')
       .leftJoinAndSelect('release.user', 'releaseUser')
       .leftJoinAndSelect('review.user', 'reviewUser')
-      .leftJoinAndSelect('childReview.user', 'replyUser');
+      .leftJoinAndSelect('childReview.user', 'replyUser')
+      .where('release.status=1');
+
+    if (username) {
+      const userEntity = await this.userService.findNameOne(username);
+      const allUserQuery = await this.userService
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.release', 'userRelease')
+        .where('user.id in (:userFocus)', {
+          userFocus: userEntity.userFocus,
+        })
+        .getMany();
+
+      const focusRelease = allUserQuery
+        .reduce((pre, cur) => [...pre, ...cur.release], [])
+        .map((item) => item.id);
+
+      query.andWhere('release.id in (:focusRelease)', {
+        focusRelease: focusRelease,
+      });
+    }
 
     const [list, total] = await query
       .orderBy(sort, 'DESC')

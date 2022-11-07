@@ -1,14 +1,14 @@
 import { CommentOutlined } from '@ant-design/icons';
 import { Comment, Space, Input, Button, Avatar } from 'antd';
-import React, { FC, useState } from 'react';
 import clsx from 'classnames';
 import { observer } from 'mobx-react';
-import { CommentReleaseReq } from '@/application/service/release';
+import React, { FC, useState } from 'react';
+import { CommentType } from '@/application/enum/release';
 import { ReplyData } from '@/application/service/home';
+import { CommentReleaseReq } from '@/application/service/release';
+import styles from '@/presentation/page/detail/index.module.scss';
 import useAuth from '@/presentation/store/use-auth';
 import { getUpdateAtLabel } from '@/utils/time';
-import { CommentType } from '@/application/enum/release';
-import styles from '@/presentation/page/detail/index.module.scss';
 
 export interface CommentProps extends ReplyData {
     children?: React.ReactNode;

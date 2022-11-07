@@ -29,6 +29,7 @@ export class ReleaseService extends TypeormHelperService<Release> {
       .leftJoinAndSelect('review.user', 'reviewUser')
       .leftJoinAndSelect('reply.user', 'replyUser')
       .where('release.id=:id', { id: +id })
+      .andWhere('release.status=1')
       .getOne();
     return resultCode({ data: entity });
   }
@@ -38,7 +39,7 @@ export class ReleaseService extends TypeormHelperService<Release> {
   }
 
   async release(releaseDto: ReleaseDto) {
-    const { img, creator } = releaseDto;
+    const { img, creator, type } = releaseDto;
     if (img?.length > 5) {
       return resultCode({
         code: Code.API_ERROR,
@@ -59,11 +60,12 @@ export class ReleaseService extends TypeormHelperService<Release> {
         img,
         createTime: new Date(),
         updateTime: new Date(),
-        status: ReleaseStatus.UnApproval,
+        status: ReleaseStatus.Success,
         owner: approverEntity.owner,
         focus: 0,
         browse: 0,
         user: userEntity,
+        type,
       });
       return resultCode();
     } catch (err) {

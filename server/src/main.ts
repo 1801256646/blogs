@@ -12,6 +12,6 @@ async function bootstrap() {
     prefix: '/public',
   });
 
-  await app.listen(config.get('global.ip'), config.get('global.port'));
+  await app.listen(config.get('global.port'), config.get('global.host'));
 }
 bootstrap();

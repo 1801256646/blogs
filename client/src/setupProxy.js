@@ -3,7 +3,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware')
 module.exports = function (app) {
 	app.use(
 		createProxyMiddleware('/api', {
-			target: 'http://120.78.142.48:3004', //换成你自己的域名
+			target: 'http://0.0.0.0:8080',
 			pathRewrite: {
 				'^/api': '',
 			},

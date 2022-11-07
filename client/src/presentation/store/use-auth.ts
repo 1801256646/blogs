@@ -1,5 +1,5 @@
-import React from 'react';
 import { observable, computed, action, runInAction, makeObservable } from 'mobx';
+import React from 'react';
 import { UserData, LoginUser } from '@/application/service/user';
 
 class AuthStore {
@@ -8,7 +8,7 @@ class AuthStore {
 
     @computed
     get isLogin() {
-        return !!this.user;
+        return !!this.user?.username;
     }
 
     constructor() {
@@ -26,7 +26,6 @@ class AuthStore {
                 });
                 localStorage.setItem('user', JSON.stringify(userData));
                 runInAction(() => {
-                    console.log(userData);
                     this.user = userData;
                 })
             }

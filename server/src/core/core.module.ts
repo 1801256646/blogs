@@ -1,11 +1,17 @@
 import { Module } from '@nestjs/common';
-import { TestModule } from './test/test.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ApproverModule } from './approver/approver.module';
 import { UploadModule } from './upload/upload.module';
+import { PasswordModule } from './password/password.module';
 
 @Module({
-  imports: [TestModule, UserModule, AuthModule, ApproverModule, UploadModule],
+  imports: [
+    UserModule,
+    AuthModule,
+    ApproverModule,
+    UploadModule,
+    PasswordModule,
+  ],
 })
 export class CoreModule {}
