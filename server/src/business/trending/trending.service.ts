@@ -32,21 +32,31 @@ export class TrendingService {
 
     if (username) {
       const userEntity = await this.userService.findNameOne(username);
-      const allUserQuery = await this.userService
-        .createQueryBuilder('user')
-        .leftJoinAndSelect('user.release', 'userRelease')
-        .where('user.id in (:userFocus)', {
-          userFocus: userEntity.userFocus,
-        })
-        .getMany();
+      if (userEntity?.userFocus) {
+        const allUserQuery = await this.userService
+          .createQueryBuilder('user')
+          .leftJoinAndSelect('user.release', 'userRelease')
+          .where('user.id in (:userFocus)', {
+            userFocus: userEntity.userFocus,
+          })
+          .getMany();
 
-      const focusRelease = allUserQuery
-        .reduce((pre, cur) => [...pre, ...cur.release], [])
-        .map((item) => item.id);
+        const focusRelease = allUserQuery
+          .reduce((pre, cur) => [...pre, ...cur.release], [])
+          .map((item) => item.id);
 
-      query.andWhere('release.id in (:focusRelease)', {
-        focusRelease: focusRelease,
-      });
+        if (!focusRelease?.length) {
+          return resultCode({
+            data: {
+              total: 0,
+              list: [],
+            },
+          });
+        }
+        query.andWhere('release.id in (:focusRelease)', {
+          focusRelease,
+        });
+      }
     }
 
     const [list, total] = await query
