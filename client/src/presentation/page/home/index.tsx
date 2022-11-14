@@ -51,43 +51,45 @@ const Home: FC = () => {
         history.push(`?tab=${key}`);
     };
 
+    if (loading || authorListLoading) {
+        return <Spin spinning={loading && authorListLoading} />
+    }
+
     return (
         <BodyScreen>
-            <Spin spinning={loading && authorListLoading}>
-                <div className={styles.home}>
-                    <div>
-                        <Tabs tabPosition='left' onChange={handleTabsChange} className={styles.leftTabs} activeKey={orderBy}>
-                            <TabPane key='updateTime' tab='最新发布'></TabPane>
-                            <TabPane key='browse' tab='浏览量'></TabPane>
-                            <TabPane key='focus' tab='点赞量'></TabPane>
-                            {isLogin && <TabPane key='userFocus' tab='关注的人'></TabPane>}
-                        </Tabs>
-                    </div>
-                    <div className={styles.list}>
-                        {
-                            data?.length ? data?.map(item => (
-                                <Card key={item.id} className={styles.package} onClick={() => history.push(`/detail?id=${item.id}`)}>
-                                    <HomeList release={item} />
-                                </Card>
-                            )) : <Card><Empty description='当前暂无发布内容'  /></Card>
-                        }
-                        {
-                            (listData?.data?.total || 0) > data.length && (
-                                <Button
-                                    onClick={() => setPagination({ page: pagination.page + 1, pageSize: pagination.pageSize })}
-                                    loading={loading}
-                                    disabled={loading}
-                                    className={styles.loadingBtn}
-                                    type='primary'
-                                >
-                                    查看更多
-                                </Button>
-                            )
-                        }
-                    </div>
-                    <Leaderboard list={authorListData?.data} />
+            <div className={styles.home}>
+                <div>
+                    <Tabs tabPosition='left' onChange={handleTabsChange} className={styles.leftTabs} activeKey={orderBy}>
+                        <TabPane key='updateTime' tab='最新发布'></TabPane>
+                        <TabPane key='browse' tab='浏览量'></TabPane>
+                        <TabPane key='focus' tab='点赞量'></TabPane>
+                        {isLogin && <TabPane key='userFocus' tab='关注的人'></TabPane>}
+                    </Tabs>
                 </div>
-            </Spin>
+                <div className={styles.list}>
+                    {
+                        data?.length ? data?.map(item => (
+                            <Card key={item.id} className={styles.package} onClick={() => history.push(`/detail/${item.id}`)}>
+                                <HomeList release={item} />
+                            </Card>
+                        )) : <Card><Empty description='当前暂无发布内容' /></Card>
+                    }
+                    {
+                        (listData?.data?.total || 0) > data.length && (
+                            <Button
+                                onClick={() => setPagination({ page: pagination.page + 1, pageSize: pagination.pageSize })}
+                                loading={loading}
+                                disabled={loading}
+                                className={styles.loadingBtn}
+                                type='primary'
+                            >
+                                查看更多
+                            </Button>
+                        )
+                    }
+                </div>
+                <Leaderboard list={authorListData?.data} />
+            </div>
         </BodyScreen>
     );
 };

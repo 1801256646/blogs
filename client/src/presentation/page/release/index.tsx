@@ -15,11 +15,12 @@ import type { UploadProps } from 'antd/es/upload';
 const Release: FC = () => {
     const history = useHistory();
     const location = useLocation();
-    const { user, isLogin } = useAuth();
+    const { isLogin } = useAuth();
     const searchParams = new URLSearchParams(location.search);
     const type = searchParams.get('type');
     const isTips = type === 'tips';
     const title = isTips ? '发布帖子' : '发布文章';
+    const [form] = Form.useForm();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [contentValue, setValue] = useState<string>('');
     const [inputValue, setInputValue] = useState<string>('');
@@ -35,7 +36,6 @@ const Release: FC = () => {
     const handleFinish = (value: ReleasePostReq) => {
         run({
             ...value,
-            creator: user?.username || '',
             img: fileList.map(item => item.response.data.url),
             type: ReleaseType.Tips,
         });
@@ -43,9 +43,7 @@ const Release: FC = () => {
 
     const handleEssayClick = () => {
         run({
-            creator: user?.username || '',
             content: contentValue,
-            username: user?.username || '',
             title: inputValue,
             type: ReleaseType.Article
         });
@@ -56,7 +54,7 @@ const Release: FC = () => {
     };
 
     useEffect(() => {
-        if (!localStorage.getItem('user')) {
+        if (!localStorage.getItem('token')) {
             message.info('请先登陆');
             setTimeout(() => {
                 history.push('/login');
@@ -67,40 +65,45 @@ const Release: FC = () => {
     return (
         <BodyScreen>
             <Card title={title} className={styles.release}>
-                {
-                    isTips ? (
-                        <Form wrapperCol={{ span: 18 }} labelCol={{ span: 3 }} onFinish={handleFinish}>
-                            <Form.Item label='标题' name='title' rules={[{ required: true, message: '标题不能为空' }]}>
-                                <Input placeholder='请输入标题' />
-                            </Form.Item>
-                            <Form.Item label='内容' name='content'>
-                                <Input.TextArea placeholder='请输入简介' showCount autoSize={{ minRows: 15 }} />
-                            </Form.Item>
-                            <Form.Item label='图片'>
-                                <Upload
-                                    action={`${window.location.origin}/api/upload`}
-                                    accept='.png, .webp, .jpg, .gif, .jpeg'
-                                    onChange={handleChange}
-                                    fileList={fileList}
-                                    listType="picture-card"
-                                >
-                                    {fileList.length < 5 && <div>
-                                        <PlusOutlined />
-                                        <div style={{ marginTop: 8 }}>Upload</div>
-                                    </div>}
-                                </Upload>
-                            </Form.Item>
-                            
-                            <Button type='primary' htmlType='submit' className={styles.releaseBtn} loading={loading}>发布</Button>
-                        </Form>
-                    ) : (
-                        <Space direction='vertical' style={{ width: '100%' }} size={20}>
-                            <Input placeholder='请输入你的标题' className={styles.input} onChange={(e) => setInputValue(e.target.value)} />
-                            <MarketDown setValue={setValue} />
-                            <Button type='primary' className={styles.releaseBtn} onClick={handleEssayClick} loading={loading}>发布</Button>
-                        </Space>
-                    )
-                }
+                <Form wrapperCol={{ span: 18 }} labelCol={{ span: 3 }} onFinish={handleFinish} form={form}>
+                    {
+                        isTips ? (
+                            <>
+                                <Form.Item label='标题' name='title' rules={[{ required: true, message: '标题不能为空' }]}>
+                                    <Input placeholder='请输入标题' />
+                                </Form.Item>
+                                <Form.Item label='内容' name='content'>
+                                    <Input.TextArea placeholder='请输入简介' showCount autoSize={{ minRows: 15 }} />
+                                </Form.Item>
+                                <Form.Item label='图片'>
+                                    <Upload
+                                        action={`${window.location.origin}/api/upload`}
+                                        accept='.png, .webp, .jpg, .gif, .jpeg'
+                                        onChange={handleChange}
+                                        fileList={fileList}
+                                        listType="picture-card"
+                                    >
+                                        {fileList.length < 5 && <div>
+                                            <PlusOutlined />
+                                            <div style={{ marginTop: 8 }}>Upload</div>
+                                        </div>}
+                                    </Upload>
+                                </Form.Item>
+                                <Button type='primary' htmlType='submit' className={styles.releaseBtn} loading={loading}>发布</Button></>
+                        ) : (
+                            <Space direction='vertical' style={{ width: '100%' }} size={20}>
+                                <Form.Item name='title' rules={[{ required: true, message: '标题不能为空' }]}>
+                                    <Input placeholder='请输入你的标题' className={styles.input} onChange={(e) => setInputValue(e.target.value)} />
+                                </Form.Item>
+                                <Form.Item label='描述' name='title' rules={[{ required: true, message: '描述不能为空' }]}>
+                                    <Input placeholder='请输入描述' />
+                                </Form.Item>
+                                <MarketDown setValue={setValue} />
+                                <Button type='primary' className={styles.releaseBtn} onClick={handleEssayClick} loading={loading}>发布</Button>
+                            </Space>
+                        )
+                    }
+                </Form>
             </Card>
         </BodyScreen>
     );

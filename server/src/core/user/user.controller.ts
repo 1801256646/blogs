@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { CreateUser, UpdateDto, UserFocus } from './user.interface';
 import { UserService } from './user.service';
 import { PasswordService } from '../password/password.service';
-import { resultCode } from '@/common/utils/api-code';
+import { JwtGuard } from '../auth/guard/jwt.guard';
 
 @Controller('user')
 export class UserController {
@@ -20,7 +20,7 @@ export class UserController {
       .leftJoinAndSelect('user.reply', 'userReply')
       .where('user.id = :id', { id })
       .getOne();
-    return resultCode({ data });
+    return data;
   }
 
   @Get('/')
@@ -29,7 +29,7 @@ export class UserController {
       .createQueryBuilder('user')
       .orderBy('user.id', 'ASC')
       .getMany();
-    return resultCode({ data: data.slice(0, 3) });
+    return data.slice(0, 3);
   }
 
   @Post('/')
@@ -41,16 +41,14 @@ export class UserController {
       .leftJoinAndSelect('user.review', 'userReview')
       .leftJoinAndSelect('user.reply', 'userReply');
     if (!users?.length) {
-      return resultCode({ data: [] });
+      return [];
     }
     query.where('user.id in (:users)', { users });
     const [list, total] = await query.getManyAndCount();
-    return resultCode({
-      data: {
-        list,
-        total,
-      },
-    });
+    return {
+      list,
+      total,
+    };
   }
 
   @Post('/add')
@@ -58,13 +56,14 @@ export class UserController {
     return this.userService.add(body);
   }
 
+  @UseGuards(JwtGuard)
   @Post('/update')
   async update(@Body() body: UpdateDto) {
     const data = await this.userService.update(body.username, body);
     await this.passwordService.update(body.username, {
       password: body.password,
     });
-    return resultCode({ data });
+    return data;
   }
 
   @Get('/create')
@@ -72,6 +71,7 @@ export class UserController {
     return this.userService.create();
   }
 
+  @UseGuards(JwtGuard)
   @Post('/focus')
   async focus(@Body() body: UserFocus) {
     return this.userService.focus(body);

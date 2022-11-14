@@ -4,6 +4,7 @@ import Home from '@/presentation/page/home';
 import Login from '@/presentation/page/login';
 import Register from '@/presentation/page/register';
 import Release from '@/presentation/page/release';
+import Search from '@/presentation/page/search';
 import User from '@/presentation/page/user';
 import UserSetting from '@/presentation/page/user-setting';
 
@@ -26,7 +27,7 @@ export const router: RouteConfig[] = [
         component: Release,
     },
     {
-        path: '/detail',
+        path: '/detail/:id',
         component: Detail,
     },
     {
@@ -35,6 +36,10 @@ export const router: RouteConfig[] = [
     },
     {
         path: '/user/:id',
-        component: User
+        component: User,
+    },
+    {
+        path: '/search',
+        component: Search,
     }
 ];

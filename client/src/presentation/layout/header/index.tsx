@@ -1,8 +1,8 @@
 import { PlusOutlined, FileTextOutlined, PictureOutlined } from '@ant-design/icons';
-import { Space, Button, Avatar, Dropdown, Menu, Popover } from 'antd';
+import { Space, Button, Avatar, Dropdown, Menu, Popover, Input } from 'antd';
 import { observer } from 'mobx-react';
 import React, { FC } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import useAuth from '@/presentation/store/use-auth';
 import styles from '../index.module.scss';
 import Logo from './logo.png';
@@ -10,16 +10,17 @@ import Logo from './logo.png';
 const Header: FC = () => {
     const history = useHistory();
     const { user, isLogin } = useAuth();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const keyword = searchParams.get('keyword') || '';
     const handleRelease = (type: string) => {
         history.push(`/release?type=${type}`);
     };
 
     const handleOff = () => {
-        localStorage.removeItem('username');
-        localStorage.removeItem('password');
-        localStorage.removeItem('user');
+        localStorage.removeItem('token');
         // eslint-disable-next-line no-restricted-globals
-        location.reload();
+        window.location.reload();
     };
 
     const handleEditData = () => { 
@@ -37,7 +38,8 @@ const Header: FC = () => {
                 <span>论坛</span>
             </Space>
 
-            <Space size={20}>
+            <Space size={20} className={styles.headerSpace}>
+                <Input.Search placeholder='请输入要搜索的内容' onSearch={value => history.push(`/search?keyword=${value}`)} defaultValue={keyword} />
                 <Popover placement='bottom' content={(
                     <Menu>
                         <Menu.Item onClick={() => handleRelease('tips')}><Space><PictureOutlined />发帖子</Space></Menu.Item>

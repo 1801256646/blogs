@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { resultCode } from '@/common/utils/api-code';
 import { Repository } from 'typeorm';
 import { TypeormHelperService } from '@/common/typeorm-helper/typeorm-helper.service';
 import { Password } from './entity/password.entity';
@@ -30,7 +29,6 @@ export class PasswordService extends TypeormHelperService<Password> {
       username,
       password,
     });
-    return resultCode();
   }
 
   async update(username: string, updateDto: UpdateDto) {

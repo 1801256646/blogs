@@ -1,7 +1,8 @@
 import { UserOutlined } from '@ant-design/icons'
 import { useRequest } from 'ahooks';
-import { Card, Space, Spin, Avatar, message, Tabs, Empty } from 'antd';
+import { Card, Space, Spin, Avatar, Tabs, Empty, Button } from 'antd';
 import TabPane from 'antd/lib/tabs/TabPane';
+import clsx from 'classnames';
 import { observer } from 'mobx-react';
 import React, { FC } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
@@ -70,10 +71,6 @@ const User: FC = () => {
     });
 
     const handleFocusClick = (id: number) => {
-        if (!user?.username) {
-            message.info('请先登陆');
-            setTimeout(() => history.push('/login'), 1000);
-        }
         focusUserRun({
             userId: `${user?.id}`,
             userFocus: `${id}`,
@@ -88,6 +85,7 @@ const User: FC = () => {
             <Spin spinning={loading || fancLoading || focusLoading}>
                 <div className={styles.userHeader}>
                     <div className={styles.userLogo}>
+                        <div>
                         <Avatar
                             icon={<UserOutlined />}
                             src={userData?.data?.avatar}
@@ -99,6 +97,20 @@ const User: FC = () => {
                             <h4>{userData?.data?.cname || userData?.data?.username}</h4>
                             <span>{userData?.data?.description}</span>
                         </Space >
+                        </div>
+                        {
+                        id !== `${user?.id}` && (user?.userFocus?.includes(id) ?
+                            <Button
+                                className={clsx(styles.hasFocusBtn, styles.headerFocusBtn)}
+                                onClick={() => handleFocusClick(+id)}
+                                loading={focusBtnLoading}
+                            >已关注</Button> : <Button
+                                type='primary'
+                                className={styles.headerFocusBtn}
+                                onClick={() => handleFocusClick(+id)}
+                                loading={focusBtnLoading}
+                            >关注</Button>)
+                    }
                     </div>
                 </div>
                 <div className={styles.detailUser}>

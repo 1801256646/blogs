@@ -1,46 +1,40 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { UserService } from '@/core/user/user.service';
-import { PasswordService } from '../password/password.service';
-import { resultCode, Code } from '@/common/utils/api-code';
-import { LoginUser, UpdateUser } from './auth.interface';
+import {
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+  Request,
+  Get,
+} from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { UserService } from '../user/user.service';
+import { UpdateUser } from './auth.interface';
+import { LocalGuard } from './guard/loca.guard';
+import { JwtGuard } from './guard/jwt.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(
+    private readonly authService: AuthService,
     private readonly userService: UserService,
-    private readonly passwordService: PasswordService,
   ) {}
 
+  @UseGuards(LocalGuard)
   @Post('/')
-  async login(@Body() body: LoginUser) {
-    const { username, password } = body;
-    const passwordEntity = await this.passwordService.findOne(username);
-    if (!passwordEntity) {
-      return resultCode({ code: Code.API_ERROR, message: '不存在该用户' });
-    }
-    if (password !== passwordEntity.password) {
-      return resultCode({ code: Code.API_ERROR, message: '密码错误' });
-    }
-    const userEntity = await this.userService.findNameOne(username);
-    return resultCode({
-      data: {
-        ...userEntity,
-        password,
-      },
-    });
+  async login(@Request() req) {
+    return this.authService.login(req.user);
   }
 
+  @UseGuards(JwtGuard)
+  @Get('/')
+  async getUser(@Request() req) {
+    const { id } = req.user;
+    return await this.userService.findOne(+id);
+  }
+
+  @UseGuards(JwtGuard)
   @Post('/update')
   async update(@Body() body: UpdateUser) {
-    const { username, password, oldPassword } = body;
-    const passwordEntity = await this.passwordService.findOne(username);
-    if (passwordEntity.password === oldPassword) {
-      const updateEntity = await this.passwordService.update(username, {
-        ...passwordEntity,
-        password,
-      });
-      return resultCode({ data: updateEntity });
-    }
-    return resultCode({ code: Code.API_ERROR, message: '旧密码错误' });
+    return this.authService.update(body);
   }
 }

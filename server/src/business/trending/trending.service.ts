@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { ReleaseService } from '@/basic/release/release.service';
 import { UserService } from '@/core/user/user.service';
 import { HomeListDto } from './trending.interface';
-import { resultCode } from '@/common/utils/api-code';
 
 @Injectable()
 export class TrendingService {
@@ -46,12 +45,10 @@ export class TrendingService {
           .map((item) => item.id);
 
         if (!focusRelease?.length) {
-          return resultCode({
-            data: {
-              total: 0,
-              list: [],
-            },
-          });
+          return {
+            total: 0,
+            list: [],
+          };
         }
         query.andWhere('release.id in (:focusRelease)', {
           focusRelease,
@@ -65,11 +62,9 @@ export class TrendingService {
       .take(pageSize)
       .getManyAndCount();
 
-    return resultCode({
-      data: {
-        total,
-        list,
-      },
-    });
+    return {
+      total,
+      list,
+    };
   }
 }

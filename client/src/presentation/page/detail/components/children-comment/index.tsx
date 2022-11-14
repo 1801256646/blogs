@@ -7,7 +7,6 @@ import { CommentType } from '@/application/enum/release';
 import { ReplyData } from '@/application/service/home';
 import { CommentReleaseReq } from '@/application/service/release';
 import styles from '@/presentation/page/detail/index.module.scss';
-import useAuth from '@/presentation/store/use-auth';
 import { getUpdateAtLabel } from '@/utils/time';
 
 export interface CommentProps extends ReplyData {
@@ -20,14 +19,12 @@ const ChildrenComment: FC<CommentProps> = (props) => {
     const { children, user: reviewUser, text, createTime, type, id, handleComment, replier } = props;
     const [isShowComment, setIsShowComment] = useState(false);
     const [inputValue, setInputValue] = useState('');
-    const { user } = useAuth();
     const reviewUsername = reviewUser?.cname || reviewUser?.username;
 
     const handleClick = () => {
         handleComment?.({
             type,
             text: inputValue,
-            username: user?.username || '',
             id: +id,
             replier: reviewUsername,
         });

@@ -1,4 +1,5 @@
-import axios, { AxiosResponse } from 'axios';
+import { message } from 'antd';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 import qs from 'qs';
 
 export interface CommonAPI<T = {}> {
@@ -12,14 +13,41 @@ const request = axios.create({
     timeout: 60000,
 });
 
-request.interceptors.request.use();
+request.interceptors.request.use((config) => {
+    const { headers } = config;
+    const token = localStorage.getItem('token');
+    if (headers) {
+        headers.token = token;
+    };
+    return config;
+});
 
 request.interceptors.response.use((res: AxiosResponse<CommonAPI>) => {
-    const { code, message } = res.data;
+    const { code, message: msg } = res.data;
     if (code !== 0) {
-        return Promise.reject(message);
+        message.error(msg);
+        return Promise.reject(msg);
     }
     return Promise.resolve(res);
+}, (err: AxiosError<any>) => {
+    if (err?.response?.status === 401) {
+        message.info('请先登陆');
+        setTimeout(() => {
+            window.location.replace('http://localhost:3001/login');
+        }, 1000);
+        return Promise.reject(err);
+    }
+    if (err?.response?.data?.message) {
+        if (typeof err?.response?.data?.message === 'string') {
+            message.error(err?.response?.data?.message);
+        }
+        if (Array.isArray(err?.response?.data?.message)) {
+            err?.response?.data?.message?.forEach((item: string) => {
+                message.error(item);
+            })
+        }
+    };
+    return Promise.reject(err);
 })
 
 export interface Request<T> {

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { resultCode, Code } from '@/common/utils/api-code';
 import { UserService } from '@/core/user/user.service';
 import { ReleaseService } from '@/basic/release/release.service';
 import { Review } from './entity/review.entity';
@@ -27,12 +26,9 @@ export class ReviewService {
   /**
    * 创建第一条评论
    */
-  async create(dto: ReviewInterface) {
-    const userEntity = await this.userService.findNameOne(dto.username);
-    if (!userEntity) {
-      return resultCode({ code: Code.API_ERROR, message: '请先登陆' });
-    }
-    const { data: releaseEntity } = await this.releaseService.findOne(dto.id);
+  async create(dto: ReviewInterface, username: string) {
+    const userEntity = await this.userService.findNameOne(username);
+    const releaseEntity = await this.releaseService.findOne(dto.id);
     await this.reviewRepository.insert({
       username: dto.username,
       text: dto.text,
@@ -40,7 +36,6 @@ export class ReviewService {
       release: releaseEntity,
       user: userEntity,
     });
-    return resultCode();
   }
 
   async update(id: number, dto: UpdateReview) {

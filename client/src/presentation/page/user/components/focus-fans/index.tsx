@@ -57,7 +57,6 @@ const UserCard: FC<UserCardProps> = (props) => {
                                                 loading={focusBtnLoading}
                                             >关注</Button>)
                                     }
-                                    
                                 </List.Item>
                             )}
                         />

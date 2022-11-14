@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { resultCode, Code } from '@/common/utils/api-code';
 import { UserService } from '@/core/user/user.service';
 import { ReviewService } from '../review/review.service';
 import { Reply } from './entity/reply.entity';
@@ -27,12 +26,9 @@ export class ReplyService {
   /**
    * 回复评论
    */
-  async reply(dto: ReplyComment) {
-    const { id, replier, text, username } = dto;
+  async reply(dto: ReplyComment, username: string) {
+    const { id, replier, text } = dto;
     const userEntity = await this.userService.findNameOne(username);
-    if (!userEntity) {
-      return resultCode({ code: Code.API_ERROR, message: '请先登陆' });
-    }
     const reviewEntity = await this.reviewService.findOne(id);
     await this.replyRepository.insert({
       replier,
@@ -42,6 +38,5 @@ export class ReplyService {
       username,
       user: userEntity,
     });
-    return resultCode();
   }
 }

@@ -1,6 +1,6 @@
 import { observable, computed, action, runInAction, makeObservable } from 'mobx';
 import React from 'react';
-import { UserData, LoginUser } from '@/application/service/user';
+import { UserData, getCurrentUser } from '@/application/service/user';
 
 class AuthStore {
     @observable
@@ -18,19 +18,15 @@ class AuthStore {
     @action
     loginUser = async () => {
         try {
-            const data: UserData = JSON.parse(localStorage.getItem('user') || '{}');
-            if (data?.username) {
-                const { data: userData } = await LoginUser({
-                    username: data?.username,
-                    password: data?.password,
-                });
-                localStorage.setItem('user', JSON.stringify(userData));
+            const token = localStorage.getItem('token');
+            if (token) {
+                const { data } = await getCurrentUser();
                 runInAction(() => {
-                    this.user = userData;
+                    this.user = data;
                 })
             }
         } catch (err) {
-            localStorage.removeItem('user');
+            localStorage.removeItem('token');
         }
     }
 }

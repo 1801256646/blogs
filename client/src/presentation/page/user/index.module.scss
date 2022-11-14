@@ -10,6 +10,7 @@
         background-color: rgba(255, 255, 255, .5);
         display: flex;
         align-items: center;
+        justify-content: space-between;
         padding: 20px;
 
         :global(.ant-space) {
@@ -64,32 +65,6 @@
         margin: 10px auto;
     }
 
-    .focusBtn {
-        text-align: center;
-        width: 70px;
-        height: 28px;
-        padding: 0;
-        border-radius: 4px;
-    }
-
-    .hasFocusBtn {
-        color: #8a919f;
-        background-color: #f2f3f5;
-        border: none;
-
-        &-hover {
-            border: none;
-            color: #8a919f;
-            background-color: #f2f3f5 !important;
-        }
-        :global(.ant-btn) {
-            &-hover {
-                color: #8a919f;
-                background: #f2f3f5 !important;
-            }
-        } 
-    }
-
     .detailUserLeft {
         margin-right: 20px;
     }
@@ -107,4 +82,38 @@
             flex: 1;
         }
     }
+}
+.focusBtn {
+    text-align: center;
+    width: 70px;
+    height: 28px;
+    padding: 0;
+    border-radius: 4px;
+}
+
+.headerFocusBtn {
+    font-size: 15px;
+    text-align: center;
+    width: 120px;
+    height: 41px;
+    padding: 0;
+    border-radius: 7px;
+}
+
+.hasFocusBtn {
+    color: #8a919f !important;
+    background-color: #f2f3f5 !important;
+    border: none !important;
+
+    &-hover {
+        border: none;
+        color: #8a919f;
+        background-color: #f2f3f5 !important;
+    }
+    :global(.ant-btn) {
+        &-hover {
+            color: #8a919f;
+            background: #f2f3f5 !important;
+        }
+    } 
 }

@@ -2,8 +2,6 @@ import { ReleaseStatus } from '@/common/enum/release';
 import { Review } from '@/basic/review/entity/review.entity';
 
 export interface ReleaseDto {
-  creator: string;
-
   title: string;
 
   description?: string;

@@ -12,21 +12,35 @@ import styles from './index.module.scss';
 
 const { Paragraph } = Typography;
 
-const HomeList: FC<{ release: ReleaseData }> = (props) => {
-    const { release } = props;
-    const { user, isLogin, loginUser } = useAuth();
+export const Mark = ({ name, keyword }: { name: string; keyword: string }) => {
+    if (!keyword) {
+        return <>{name}</>;
+    }
+    const arr = name?.split(keyword);
+    return (
+        <>
+            {arr?.map((str, index) => (
+                <span key={index}>
+                    {str}
+                    {index === arr.length - 1 ? null : (
+                        <span style={{ color: "red" }}>{keyword}</span>
+                    )}
+                </span>
+            ))}
+        </>
+    );
+};
+
+const HomeList: FC<{ release: ReleaseData, keyword?: string }> = (props) => {
+    const { release, keyword } = props;
+    const { user, loginUser } = useAuth();
     const history = useHistory();
     const [likes, setLikes] = useState(release.focus || 0);
     const [action, setAction] = useState<string | null>('open');
 
     const like = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation();
-        if (!isLogin) {
-            message.info('请先登陆');
-            setTimeout(() => history.push('/login'), 1000);
-        }
         const { code } = await focusRelease({
-            username: user?.username || '',
             releaseId: release.id,
         })
         if (code === 0) {
@@ -57,7 +71,7 @@ const HomeList: FC<{ release: ReleaseData }> = (props) => {
             <ReadOutlined />浏览
             <span>{release.browse}</span>
         </Space>,
-        <Space onClick={(e) => like(e)} size={2}>
+        <Space size={2}>
             <MessageOutlined />
             评论
             <span className="comment-action">{commentSum}</span>
@@ -81,8 +95,10 @@ const HomeList: FC<{ release: ReleaseData }> = (props) => {
             </Avatar>}
             content={
                 <div>
-                    <p className={styles.title}>{release.title}</p>
-                    <Paragraph ellipsis={{ rows: 3 }} className={styles.content}>{release.content}</Paragraph>
+                    <p className={styles.title}><Mark name={release.title} keyword={keyword || ''} /></p>
+                    <Paragraph ellipsis={{ rows: 3 }} className={styles.content}>
+                        <Mark name={release.content} keyword={keyword || ''} />
+                    </Paragraph>
                     <div className={styles.homeListImage}>
                         {release?.img?.map((item, index) => (
                             <img alt='' src={item} key={index} />

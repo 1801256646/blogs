@@ -10,7 +10,7 @@ import styles from './index.module.scss';
 
 const Login: FC = () => {
     const history = useHistory();
-    const { loginUser: loginStoreUser } = useAuth();
+    const { loginUser: loginStoreUser, isLogin } = useAuth();
 
     const { loading, run, error } = useRequest(
         LoginUser,
@@ -19,7 +19,7 @@ const Login: FC = () => {
             onSuccess: async (data) => {
                 if (data?.code === 0) {
                     message.success('登陆成功!');
-                    localStorage.setItem('user', JSON.stringify(data?.data));
+                    localStorage.setItem('token', data.data.token);
                     loginStoreUser();
                     setTimeout(() => {
                         history.push('/');
@@ -27,10 +27,6 @@ const Login: FC = () => {
                 } else {
                     message.error(error?.message);
                 } 
-            },
-            onError: (error) => {
-                console.log(error);
-                message.error(error as any);
             },
         }
     )
@@ -41,6 +37,12 @@ const Login: FC = () => {
             password,
         });
     };
+
+    React.useEffect(() => {
+        if (isLogin) {
+            history.push('/');
+        };
+    }, [isLogin]);
 
     return (
         <Card title='登陆' className={styles.loginCard}>

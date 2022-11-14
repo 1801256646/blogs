@@ -1,5 +1,4 @@
 export interface FocusDto {
-  username: string;
   releaseId: number;
 }
 

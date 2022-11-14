@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserService } from '@/core/user/user.service';
 import { ReleaseStatus } from '@/common/enum/release';
-import { resultCode, Code } from '@/common/utils/api-code';
 import { ApproverService } from '@/core/approver/approver.service';
 import { TypeormHelperService } from '@/common/typeorm-helper/typeorm-helper.service';
 import { Release } from './entity/release.entity';
@@ -21,7 +20,7 @@ export class ReleaseService extends TypeormHelperService<Release> {
   }
 
   async findOne(id: number) {
-    const entity = await this.releaseRepository
+    return await this.releaseRepository
       .createQueryBuilder('release')
       .leftJoinAndSelect('release.review', 'review')
       .leftJoinAndSelect('release.user', 'releaseUser')
@@ -31,29 +30,22 @@ export class ReleaseService extends TypeormHelperService<Release> {
       .where('release.id=:id', { id: +id })
       .andWhere('release.status=1')
       .getOne();
-    return resultCode({ data: entity });
   }
 
   async findAll() {
     return await this.releaseRepository.find();
   }
 
-  async release(releaseDto: ReleaseDto) {
-    const { img, creator, type } = releaseDto;
+  async release(releaseDto: ReleaseDto, creator: string) {
+    const { img, type } = releaseDto;
     if (img?.length > 5) {
-      return resultCode({
-        code: Code.API_ERROR,
-        message: '发布的图片不能超过5张。',
-      });
+      throw new HttpException(
+        '发布的图片不能超过5张。',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     try {
       const userEntity = await this.userService.findNameOne(creator);
-      if (!userEntity) {
-        return resultCode({
-          code: Code.API_ERROR,
-          message: '请登陆之后，再发布文章。',
-        });
-      }
       const approverEntity = await this.approverService.find();
       await this.releaseRepository.insert({
         ...releaseDto,
@@ -66,10 +58,10 @@ export class ReleaseService extends TypeormHelperService<Release> {
         browse: 0,
         user: userEntity,
         type,
+        creator,
       });
-      return resultCode();
     } catch (err) {
-      return resultCode({ code: Code.API_ERROR, message: err });
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -84,7 +76,7 @@ export class ReleaseService extends TypeormHelperService<Release> {
         item.status === ReleaseStatus.UnApproval
       );
     });
-    return resultCode({ data: approverList });
+    return approverList;
   }
 
   /**
@@ -92,15 +84,14 @@ export class ReleaseService extends TypeormHelperService<Release> {
    */
   async approver(data: ApproverDto) {
     const { id, status, username } = data;
-    const { data: releaseEntity } = await this.findOne(id);
+    const releaseEntity = await this.findOne(id);
     if (releaseEntity.owner.split(';').includes(username)) {
       await this.update(id, { status });
-      return resultCode();
     }
   }
 
   async update(id: number, updateDto: UpdateDto) {
-    const { data: entity } = await this.findOne(id);
+    const entity = await this.findOne(id);
     const updateEntity = this.releaseRepository.merge(entity, updateDto);
     return this.releaseRepository.save(updateEntity);
   }

@@ -46,10 +46,18 @@ export type GetIdsUserRes = {
 }
 
 // 登陆当前用户
-export const LoginUser = async (data: LoginUserReq): Promise<CommonAPI<UserData>> => {
+export const LoginUser = async (data: LoginUserReq): Promise<CommonAPI<{ user: UserData, token: string }>> => {
     const res = await request.post({
         url: '/auth',
         data
+    });
+    return res.data;
+};
+
+// 获取当前用户信息
+export const getCurrentUser = async (): Promise<CommonAPI<UserData>> => {
+    const res = await request.get({
+        url: '/auth',
     });
     return res.data;
 };

@@ -1,8 +1,17 @@
-import { Body, Controller, Get, Query, Post, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Query,
+  Post,
+  Delete,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { ReleaseStatus } from '@/common/enum/release';
 import { ReleaseService } from './release.service';
-import { resultCode } from '@/common/utils/api-code';
 import { ReleaseDto, ApproverDto } from './release.interface';
+import { JwtGuard } from '@/core/auth/guard/jwt.guard';
 
 @Controller('release')
 export class ReleaseController {
@@ -17,9 +26,10 @@ export class ReleaseController {
     return this.releaseService.getApproverList(owner);
   }
 
+  @UseGuards(JwtGuard)
   @Post()
-  async release(@Body() body: ReleaseDto) {
-    return this.releaseService.release(body);
+  async release(@Body() body: ReleaseDto, @Request() req) {
+    return this.releaseService.release(body, req.user.username);
   }
 
   @Post('approver')
@@ -37,24 +47,22 @@ export class ReleaseController {
       .leftJoinAndSelect('release.user', 'user')
       .where('release.status=1');
     if (!releaseId?.length) {
-      return resultCode({ data: [] });
+      return [];
     }
     query.andWhere('release.id in (:releaseId)', { releaseId });
     const [list, total] = await query.getManyAndCount();
-    return resultCode({
-      data: {
-        list,
-        total,
-      },
-    });
+    return {
+      list,
+      total,
+    };
   }
 
   @Get('/get-all')
   async getAll() {
-    const data = await this.releaseService.findAll();
-    return resultCode({ data });
+    return await this.releaseService.findAll();
   }
 
+  @UseGuards(JwtGuard)
   @Delete()
   async delete(@Query('id') id: number) {
     return this.releaseService.update(id, {

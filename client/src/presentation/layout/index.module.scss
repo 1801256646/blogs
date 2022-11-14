@@ -49,6 +49,14 @@
             background: #f0f2f5;
         }
     }
+    
+    .headerSpace {
+        :global {
+            .ant-space-item {
+                display: flex;
+            }
+        }
+    }
 }
 
 :global {

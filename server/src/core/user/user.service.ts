@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { resultCode, Code } from '@/common/utils/api-code';
 import { Repository } from 'typeorm';
 import { TypeormHelperService } from '@/common/typeorm-helper/typeorm-helper.service';
 import { User } from './entity/user.entity';
@@ -50,7 +49,7 @@ export class UserService extends TypeormHelperService<User> {
     const { password, username, cname } = user;
     const entity = await this.findNameOne(username);
     if (entity) {
-      return resultCode({ message: '用户名已存在', code: Code.API_ERROR });
+      throw new HttpException('用户名已存在', HttpStatus.BAD_REQUEST);
     }
     const list = await this.userRepository.insert({
       username,
@@ -62,9 +61,9 @@ export class UserService extends TypeormHelperService<User> {
       password,
     });
     if (list) {
-      return resultCode();
+      return;
     }
-    return resultCode({ message: '新增失败', code: Code.API_ERROR });
+    throw new HttpException('注册用户失败', HttpStatus.BAD_REQUEST);
   }
 
   async focus(dto: UserFocus) {
@@ -72,7 +71,7 @@ export class UserService extends TypeormHelperService<User> {
     const entity = await this.findOne(userId);
     const userFocusEntity = await this.findOne(userFocus);
     if (!entity) {
-      return resultCode({ code: Code.API_ERROR, message: '当前用户不存在' });
+      throw new HttpException('当前用户不存在', HttpStatus.BAD_REQUEST);
     }
     if (entity.userFocus?.find((item) => item === userFocus)) {
       const remote = { ...entity };
@@ -88,10 +87,10 @@ export class UserService extends TypeormHelperService<User> {
         removeEntity.userFanc.findIndex((item) => item === userId),
         1,
       );
-      const updateEntitu = await this.update(userFocusEntity.username, {
+      const updateEntity = await this.update(userFocusEntity.username, {
         userFanc: removeEntity.userFanc,
       });
-      return resultCode({ data: updateEntitu });
+      return updateEntity;
     }
 
     await this.update(entity.username, {
@@ -100,7 +99,7 @@ export class UserService extends TypeormHelperService<User> {
     const updateEntity = await this.update(userFocusEntity.username, {
       userFanc: [...(userFocusEntity?.userFanc || []), userId],
     });
-    return resultCode({ data: updateEntity });
+    return updateEntity;
   }
 
   async update(name: string, updateDto: UpdateDto) {

@@ -5,8 +5,6 @@ import client, { CommonAPI } from './request';
 import { UserData } from './user';
 
 export type ReleasePostReq = {
-    creator: string;
-    username: string;
     title: string;
     content: string;
     img?: any;
@@ -14,11 +12,9 @@ export type ReleasePostReq = {
     type: ReleaseType;
 }
 export type FocusReleaseReq = {
-    username: string;
     releaseId: number;
 }
 export type CommentReleaseReq = {
-    username: string;
     text: string;
     id: number;
     type: CommentType;
