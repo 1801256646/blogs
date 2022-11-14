@@ -16,7 +16,7 @@ const request = axios.create({
 request.interceptors.request.use((config) => {
     const { headers } = config;
     const token = localStorage.getItem('token');
-    if (headers) {
+    if (headers && token) {
         headers.token = token;
     };
     return config;

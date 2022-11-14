@@ -36,7 +36,7 @@ const Release: FC = () => {
     const handleFinish = (value: ReleasePostReq) => {
         run({
             ...value,
-            img: fileList.map(item => item.response.data.url),
+            img: fileList?.map(item => item.response?.data?.url),
             type: ReleaseType.Tips,
         });
     };
