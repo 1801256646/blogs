@@ -41,11 +41,13 @@ const Release: FC = () => {
         });
     };
 
-    const handleEssayClick = () => {
+    const handleEssayClick = async () => {
+        await form.validateFields();
         run({
             content: contentValue,
             title: inputValue,
-            type: ReleaseType.Article
+            type: ReleaseType.Article,
+            description: form.getFieldValue('description'),
         });
     };
 
@@ -92,11 +94,11 @@ const Release: FC = () => {
                                 <Button type='primary' htmlType='submit' className={styles.releaseBtn} loading={loading}>发布</Button></>
                         ) : (
                             <Space direction='vertical' style={{ width: '100%' }} size={20}>
-                                <Form.Item name='title' rules={[{ required: true, message: '标题不能为空' }]}>
+                                <Form.Item name='title' rules={[{ required: true, message: '标题不能为空' }]} wrapperCol={{ span: 24 }}>
                                     <Input placeholder='请输入你的标题' className={styles.input} onChange={(e) => setInputValue(e.target.value)} />
                                 </Form.Item>
-                                <Form.Item label='描述' name='title' rules={[{ required: true, message: '描述不能为空' }]}>
-                                    <Input placeholder='请输入描述' />
+                                <Form.Item name='description' rules={[{ required: true, message: '描述不能为空' }]} wrapperCol={{ span: 24 }}>
+                                    <Input placeholder='请输入描述' className={styles.input} />
                                 </Form.Item>
                                 <MarketDown setValue={setValue} />
                                 <Button type='primary' className={styles.releaseBtn} onClick={handleEssayClick} loading={loading}>发布</Button>

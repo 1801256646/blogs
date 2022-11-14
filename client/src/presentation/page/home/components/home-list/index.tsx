@@ -97,7 +97,7 @@ const HomeList: FC<{ release: ReleaseData, keyword?: string }> = (props) => {
                 <div>
                     <p className={styles.title}><Mark name={release.title} keyword={keyword || ''} /></p>
                     <Paragraph ellipsis={{ rows: 3 }} className={styles.content}>
-                        <Mark name={release.content} keyword={keyword || ''} />
+                        <Mark name={release.description ?? release.content} keyword={keyword || ''} />
                     </Paragraph>
                     <div className={styles.homeListImage}>
                         {release?.img?.map((item, index) => (
