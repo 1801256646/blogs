@@ -45,7 +45,7 @@ const RemoveRelease: FC<RemoveReleaseProps> = (props) => {
           dataSource={dataSource}
           loading={loading}
           onRow={record => ({
-              onClick: () => history.push(`/detail?id=${record.id}`),
+              onClick: () => history.push(`/detail/${record.id}`),
           })}
       />
   );

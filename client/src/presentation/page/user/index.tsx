@@ -156,7 +156,7 @@ const User: FC = () => {
                             <Spin spinning={releaseListLoading}>
                                 {
                                     tipsList?.length ? tipsList?.map(item => (
-                                        <Card key={item.id} className={styles.package} onClick={() => history.push(`/detail?id=${item.id}`)}>
+                                        <Card key={item.id} className={styles.package} onClick={() => history.push(`/detail/${item.id}`)}>
                                             <HomeList release={item} />
                                         </Card>
                                     )) : <Card><Empty description='当前暂无发布内容' /></Card>
@@ -167,7 +167,7 @@ const User: FC = () => {
                             <Spin spinning={releaseListLoading}>
                                 {
                                     articleList?.length ? articleList?.map(item => (
-                                        <Card key={item.id} className={styles.package} onClick={() => history.push(`/detail?id=${item.id}`)}>
+                                        <Card key={item.id} className={styles.package} onClick={() => history.push(`/detail/${item.id}`)}>
                                             <HomeList release={item} />
                                         </Card>
                                     )) : <Card><Empty description='当前暂无发布内容' /></Card>
