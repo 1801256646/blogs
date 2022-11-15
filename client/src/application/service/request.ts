@@ -1,6 +1,7 @@
 import { message } from 'antd';
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import qs from 'qs';
+import process from '@/presentation/components/progress';
 
 export interface CommonAPI<T = {}> {
     code: number;
@@ -14,6 +15,7 @@ const request = axios.create({
 });
 
 request.interceptors.request.use((config) => {
+    process.start();
     const { headers } = config;
     const token = localStorage.getItem('token');
     if (headers && token) {
@@ -23,6 +25,7 @@ request.interceptors.request.use((config) => {
 });
 
 request.interceptors.response.use((res: AxiosResponse<CommonAPI>) => {
+    process.stop();
     const { code, message: msg } = res.data;
     if (code !== 0) {
         message.error(msg);

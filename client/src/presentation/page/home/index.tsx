@@ -1,5 +1,5 @@
 import { useRequest } from 'ahooks';
-import { Card, Tabs, Spin, Button, Empty } from 'antd';
+import { Card, Tabs, Button, Empty } from 'antd';
 import { observer } from 'mobx-react';
 import React, { FC, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -43,17 +43,13 @@ const Home: FC = () => {
         },
     });
 
-    const { data: authorListData, loading: authorListLoading } = useRequest(() => authorList());
+    const { data: authorListData } = useRequest(() => authorList());
 
     const handleTabsChange = (key: string) => {
         setOrderBy(key as ReleaseOrderBy);
         setPagination(DEFAULT_PAGINATION);
         history.push(`?tab=${key}`);
     };
-
-    if (loading || authorListLoading) {
-        return <Spin spinning={loading && authorListLoading} />
-    }
 
     return (
         <BodyScreen>
