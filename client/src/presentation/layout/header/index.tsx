@@ -55,13 +55,13 @@ const Header: FC = () => {
                                 <Menu>
                                     <Menu.Item onClick={handleUser}>个人中心</Menu.Item>
                                     <Menu.Item onClick={handleEditData}>编辑资料</Menu.Item>
-                                    <Menu.Item onClick={handleOff}>退出登陆</Menu.Item>
+                                    <Menu.Item onClick={handleOff}>退出登录</Menu.Item>
                                 </Menu>
                             )}>
                                 <Avatar size={40} className={styles.avatar} src={user?.avatar}>{(user?.cname?.[0] || user?.username?.[0] || 'U').toLocaleUpperCase()}</Avatar>
                             </Dropdown>
                         )
-                        : <Button className={styles.login} onClick={() => history.push('/login')}>登陆</Button>
+                        : <Button className={styles.login} onClick={() => history.push('/login')}>登录</Button>
                 }
             </Space>
         </div>

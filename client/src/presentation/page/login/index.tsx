@@ -18,7 +18,7 @@ const Login: FC = () => {
             manual: true,
             onSuccess: async (data) => {
                 if (data?.code === 0) {
-                    message.success('登陆成功!');
+                    message.success('登录成功!');
                     localStorage.setItem('token', data.data.token);
                     loginStoreUser();
                     setTimeout(() => {
@@ -45,7 +45,7 @@ const Login: FC = () => {
     }, [isLogin]);
 
     return (
-        <Card title='登陆' className={styles.loginCard}>
+        <Card title='登录' className={styles.loginCard}>
             <Form labelCol={{ span: 4 }} wrapperCol={{ span: 18 }} onFinish={handleFinish}>
                 <Form.Item label='用户名' name='username' rules={rule.username}>
                     <Input placeholder='请输入用户名' />
@@ -54,7 +54,7 @@ const Login: FC = () => {
                     <Input.Password placeholder='请输入密码' />
                 </Form.Item>
                 <div className={styles.submitBtn}>
-                    <Button type='primary' htmlType='submit' loading={loading}>登陆</Button>
+                    <Button type='primary' htmlType='submit' loading={loading}>登录</Button>
                     <Button type='link' onClick={() => history.push('/register')}>没有账号？点击这里去注册&gt;&gt;</Button>
                 </div>
             </Form>

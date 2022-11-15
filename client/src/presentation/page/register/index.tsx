@@ -55,7 +55,7 @@ const Register: FC = () => {
                 </Form.Item>
                 <div className={styles.submitBtn}>
                     <Button type='primary' htmlType='submit' loading={loading}>注册</Button>
-                    <Button type='link' onClick={() => history.push('/login')}>已有账号？前往登陆&gt;&gt;</Button>
+                    <Button type='link' onClick={() => history.push('/login')}>已有账号？前往登录&gt;&gt;</Button>
                 </div>
             </Form>
         </Card>

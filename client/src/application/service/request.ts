@@ -34,9 +34,9 @@ request.interceptors.response.use((res: AxiosResponse<CommonAPI>) => {
     return Promise.resolve(res);
 }, (err: AxiosError<any>) => {
     if (err?.response?.status === 401) {
-        message.info('请先登陆');
+        message.info('请先登录');
         setTimeout(() => {
-            window.location.replace('http://localhost:3001/login');
+            window.history.pushState({}, '', '/login')
         }, 1000);
         return Promise.reject(err);
     }

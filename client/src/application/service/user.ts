@@ -45,7 +45,7 @@ export type GetIdsUserRes = {
     list: UserData[];
 }
 
-// 登陆当前用户
+// 登录当前用户
 export const LoginUser = async (data: LoginUserReq): Promise<CommonAPI<{ user: UserData, token: string }>> => {
     const res = await request.post({
         url: '/auth',

@@ -57,7 +57,7 @@ const Release: FC = () => {
 
     useEffect(() => {
         if (!localStorage.getItem('token')) {
-            message.info('请先登陆');
+            message.info('请先登录');
             setTimeout(() => {
                 history.push('/login');
             }, 1000);
