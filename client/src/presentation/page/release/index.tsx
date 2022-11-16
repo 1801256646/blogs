@@ -97,7 +97,7 @@ const Release: FC = () => {
                                 <Form.Item name='title' rules={[{ required: true, message: '标题不能为空' }]} wrapperCol={{ span: 24 }}>
                                     <Input placeholder='请输入你的标题' className={styles.input} onChange={(e) => setInputValue(e.target.value)} />
                                 </Form.Item>
-                                <Form.Item name='description' rules={[{ required: true, message: '描述不能为空' }]} wrapperCol={{ span: 24 }}>
+                                <Form.Item name='description' wrapperCol={{ span: 24 }}>
                                     <Input placeholder='请输入描述' className={styles.input} />
                                 </Form.Item>
                                 <MarketDown setValue={setValue} />
