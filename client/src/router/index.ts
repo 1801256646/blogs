@@ -7,6 +7,7 @@ import Release from '@/presentation/page/release';
 import Search from '@/presentation/page/search';
 import User from '@/presentation/page/user';
 import UserSetting from '@/presentation/page/user-setting';
+import UserAll from '@/presentation/page/user/components/user-all';
 
 export const router: RouteConfig[] = [
     {
@@ -41,5 +42,9 @@ export const router: RouteConfig[] = [
     {
         path: '/search',
         component: Search,
-    }
+    },
+    {
+        path: '/user-all',
+        component: UserAll,
+    },
 ];

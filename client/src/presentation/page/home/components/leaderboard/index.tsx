@@ -12,7 +12,7 @@ const Leaderboard: FC<{ list?: UserData[] }> = (props) => {
   return (
       <div className={styles.leaderboard}>
           <Card title='🎖️作者榜' actions={[
-              <Button type='link'>完整榜单&gt;&gt;</Button>
+              <Button type='link' onClick={() => history.push('/user-all')}>完整榜单&gt;&gt;</Button>
           ]}>
               {
                   list?.map((item) => (

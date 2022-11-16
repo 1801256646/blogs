@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
-import { CreateUser, UpdateDto, UserFocus } from './user.interface';
+import { CreateUser, UpdateDto, UserFocus, GetAllUser } from './user.interface';
 import { UserService } from './user.service';
 import { PasswordService } from '../password/password.service';
 import { JwtGuard } from '../auth/guard/jwt.guard';
@@ -75,5 +75,10 @@ export class UserController {
   @Post('/focus')
   async focus(@Body() body: UserFocus) {
     return this.userService.focus(body);
+  }
+
+  @Get('/get-all')
+  async getAll(@Query() query: GetAllUser) {
+    return await this.userService.findAll(query);
   }
 }

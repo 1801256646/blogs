@@ -24,3 +24,9 @@ export interface UserFocus {
   userId: number;
   userFocus: number;
 }
+
+export interface GetAllUser {
+  page: number;
+
+  pageSize: number;
+}

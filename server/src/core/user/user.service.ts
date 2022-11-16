@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TypeormHelperService } from '@/common/typeorm-helper/typeorm-helper.service';
 import { User } from './entity/user.entity';
-import { CreateUser, UpdateDto, UserFocus } from './user.interface';
+import { CreateUser, UpdateDto, UserFocus, GetAllUser } from './user.interface';
 import { PasswordService } from '../password/password.service';
 
 @Injectable()
@@ -20,8 +20,17 @@ export class UserService extends TypeormHelperService<User> {
     return this.userRepository.createQueryBuilder('user').getManyAndCount();
   }
 
-  async findAll() {
-    return await this.userRepository.find();
+  async findAll(dto: GetAllUser) {
+    const { page = 1, pageSize = 10 } = dto;
+    const [list, total] = await this.userRepository
+      .createQueryBuilder('user')
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
+      .getManyAndCount();
+    return {
+      list,
+      total,
+    };
   }
 
   async findOne(id: number) {

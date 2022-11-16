@@ -45,6 +45,13 @@ export type GetIdsUserRes = {
     list: UserData[];
 }
 
+export type GetAllUserReq = {
+    page: number;
+    pageSize: number;
+}
+
+export type GetAllUserRes = GetIdsUserRes;
+
 // 登录当前用户
 export const LoginUser = async (data: LoginUserReq): Promise<CommonAPI<{ user: UserData, token: string }>> => {
     const res = await request.post({
@@ -111,6 +118,15 @@ export const getIdsUser = async (users: string[]): Promise<CommonAPI<GetIdsUserR
     const res = await request.post({
         url: '/user',
         data: { users },
+    });
+    return res.data;
+}
+
+// 获取所有用户信息
+export const getAllUser = async (data: GetAllUserReq): Promise<CommonAPI<GetAllUserRes>> => {
+    const res = await request.get({
+        url: '/user/get-all',
+        data,
     });
     return res.data;
 }
