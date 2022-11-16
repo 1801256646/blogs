@@ -21,7 +21,7 @@ const UserAll: FC = observer(() => {
     const { user, loginUser } = useAuth();
     const history = useHistory();
 
-    const { run: focusUserRun, loading: focusBtnLoading } = useRequest(focusUser, {
+    const { run: focusUserRun } = useRequest(focusUser, {
         manual: true,
         onSuccess: () => {
             loginUser();
@@ -87,12 +87,10 @@ const UserAll: FC = observer(() => {
                                                 <Button
                                                     className={clsx(styles.hasFocusBtn, styles.focusBtn)}
                                                     onClick={() => handleFocusClick(item.id)}
-                                                    loading={focusBtnLoading}
                                                 >已关注</Button> : <Button
                                                     type='primary'
                                                     className={styles.focusBtn}
                                                     onClick={() => handleFocusClick(item.id)}
-                                                    loading={focusBtnLoading}
                                                 >关注</Button>))
                                     }
                                 </List.Item>
