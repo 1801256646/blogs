@@ -30,10 +30,13 @@ const RemoveRelease: FC<RemoveReleaseProps> = (props) => {
             render: (record: ReleaseData) => record.status === ReleaseStatus.Success && (
                 <Popconfirm
                     title="确定要下架当前文章（帖子）？"
-                    onConfirm={() => handleRemove(record.id)}
+                    onConfirm={(e) => { 
+                        e?.stopPropagation();
+                        handleRemove(record.id)
+                    }}
                     icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                 >
-                    <Button type='primary' danger>下架</Button>
+                    <Button type='primary' danger onClick={e => e.stopPropagation()}>下架</Button>
                 </Popconfirm>
             )
         }
