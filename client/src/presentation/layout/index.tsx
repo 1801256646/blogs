@@ -23,7 +23,9 @@ const AppLayout: FC<AppLayoutProps> = (props) => {
     <Layout className={styles.layout}>
       <Header><AppHeader /></Header>
       <Content><Component /></Content>
-      <Footer>footer</Footer>
+      <Footer>
+        <span onClick={() => window.open('https://beian.miit.gov.cn')} className={styles.footer}>粤ICP备2022137097号-1</span>
+      </Footer>
     </Layout>
   );
 };
