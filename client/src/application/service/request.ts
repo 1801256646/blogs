@@ -33,6 +33,7 @@ request.interceptors.response.use((res: AxiosResponse<CommonAPI>) => {
   }
   return Promise.resolve(res);
 }, (err: AxiosError<any>) => {
+  process.stop();
   if (err?.response?.status === 401) {
     message.info('请先登录');
     setTimeout(() => {

@@ -15,11 +15,14 @@ export class AuthService {
 
   async validateUser(username: string, password: string) {
     const user = await this.userService.findNameOne(username);
+    if (!user) {
+      throw new HttpException('用户名不存在', HttpStatus.BAD_REQUEST);
+    }
     const passwordEntity = await this.passwordService.findOne(username);
     if (user && passwordEntity.password === password) {
       return user;
     }
-    return null;
+    throw new HttpException('密码错误', HttpStatus.BAD_REQUEST);
   }
 
   async login(user: User) {
