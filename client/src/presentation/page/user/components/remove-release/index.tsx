@@ -13,44 +13,44 @@ export interface RemoveReleaseProps {
 }
 
 const RemoveRelease: FC<RemoveReleaseProps> = (props) => {
-    const { loading, dataSource, handleRemove } = props;
-    const history = useHistory();
+  const { loading, dataSource, handleRemove } = props;
+  const history = useHistory();
 
-    const columns: ColumnsType<ReleaseData> = [
-        {
-            dataIndex: 'id',
-            title: 'id',
-        },
-        {
-            dataIndex: 'title',
-            title: '标题',
-        },
-        {
-            title: '操作',
-            render: (record: ReleaseData) => record.status === ReleaseStatus.Success && (
-                <Popconfirm
-                    title="确定要下架当前文章（帖子）？"
-                    onConfirm={(e) => { 
-                        e?.stopPropagation();
-                        handleRemove(record.id)
-                    }}
-                    icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-                >
-                    <Button type='primary' danger onClick={e => e.stopPropagation()}>下架</Button>
-                </Popconfirm>
-            )
-        }
-    ];
+  const columns: ColumnsType<ReleaseData> = [
+    {
+      dataIndex: 'id',
+      title: 'id',
+    },
+    {
+      dataIndex: 'title',
+      title: '标题',
+    },
+    {
+      title: '操作',
+      render: (record: ReleaseData) => record.status === ReleaseStatus.Success && (
+        <Popconfirm
+          title="确定要下架当前文章（帖子）？"
+          onConfirm={(e) => { 
+            e?.stopPropagation();
+            handleRemove(record.id)
+          }}
+          icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+        >
+          <Button type='primary' danger onClick={e => e.stopPropagation()}>下架</Button>
+        </Popconfirm>
+      )
+    }
+  ];
 
   return (
-      <Table
-          columns={columns}
-          dataSource={dataSource}
-          loading={loading}
-          onRow={record => ({
-              onClick: () => history.push(`/detail/${record.id}`),
-          })}
-      />
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      loading={loading}
+      onRow={record => ({
+        onClick: () => history.push(`/detail/${record.id}`),
+      })}
+    />
   );
 };
 

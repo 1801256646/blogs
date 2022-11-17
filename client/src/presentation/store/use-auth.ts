@@ -4,31 +4,31 @@ import { UserData, getCurrentUser } from '@/application/service/user';
 
 class AuthStore {
     @observable
-    user: UserData | null = null;
+      user: UserData | null = null;
 
     @computed
     get isLogin() {
-        return !!this.user?.username;
+      return !!this.user?.username;
     }
 
     constructor() {
-        makeObservable(this);
+      makeObservable(this);
     }
 
     @action
-    loginUser = async () => {
+      loginUser = async () => {
         try {
-            const token = localStorage.getItem('token');
-            if (token) {
-                const { data } = await getCurrentUser();
-                runInAction(() => {
-                    this.user = data;
-                })
-            }
+          const token = localStorage.getItem('token');
+          if (token) {
+            const { data } = await getCurrentUser();
+            runInAction(() => {
+              this.user = data;
+            })
+          }
         } catch (err) {
-            localStorage.removeItem('token');
+          localStorage.removeItem('token');
         }
-    }
+      }
 }
 
 const context = React.createContext(new AuthStore());

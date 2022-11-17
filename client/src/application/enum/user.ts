@@ -4,6 +4,6 @@ export enum UserFancFocus {
 }
 
 export const UserFancFocusLabel = {
-    [UserFancFocus.Fanc]: '粉丝',
-    [UserFancFocus.Focus]: '关注'
+  [UserFancFocus.Fanc]: '粉丝',
+  [UserFancFocus.Focus]: '关注'
 }

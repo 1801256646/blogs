@@ -46,9 +46,9 @@ export type ReplyData = ReviewData & {
 
 // 发布帖子
 export const getHomeList = async (data: getHomeListReq): Promise<CommonAPI<getHomeListRes>> => {
-    const res = await client.get({
-        url: '/trending',
-        data,
-    });
-    return res.data;
+  const res = await client.get({
+    url: '/trending',
+    data,
+  });
+  return res.data;
 };

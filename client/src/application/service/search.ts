@@ -16,9 +16,9 @@ export type SearchDto = {
 
 // 发布帖子
 export const searchList = async (data: SearchDto): Promise<CommonAPI<getSearchRes>> => {
-    const res = await client.get({
-        url: '/search',
-        data,
-    });
-    return res.data;
+  const res = await client.get({
+    url: '/search',
+    data,
+  });
+  return res.data;
 };

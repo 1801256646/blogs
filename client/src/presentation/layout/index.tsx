@@ -12,20 +12,20 @@ export interface AppLayoutProps {
 const { Header, Footer, Content } = Layout;
 
 const AppLayout: FC<AppLayoutProps> = (props) => {
-    const { component: Component } = props;
-    const { loginUser } = useAuth();
+  const { component: Component } = props;
+  const { loginUser } = useAuth();
     
-    useEffect(() => {
-        loginUser();
-    }, []);
+  useEffect(() => {
+    loginUser();
+  }, []);
 
-    return (
-        <Layout className={styles.layout}>
-            <Header><AppHeader /></Header>
-            <Content><Component /></Content>
-            <Footer>footer</Footer>
-        </Layout>
-    );
+  return (
+    <Layout className={styles.layout}>
+      <Header><AppHeader /></Header>
+      <Content><Component /></Content>
+      <Footer>footer</Footer>
+    </Layout>
+  );
 };
 
 export default observer(AppLayout);

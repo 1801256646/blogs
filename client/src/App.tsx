@@ -7,25 +7,25 @@ import { router } from './router';
 import 'antd/dist/antd.min.css';
 
 const App = () => {
-    const { loginUser } = useAuth();
-    React.useEffect(() => {
-        loginUser();
-    }, []);
+  const { loginUser } = useAuth();
+  React.useEffect(() => {
+    loginUser();
+  }, []);
 
-    return (
-        <Router history={getHistory()}>
-            <Switch>
-                {router.map((item, index) => {
-                    const { component, ...reset } = item;
-                    return (
-                        <Route key={index} {...reset} render={() => {
-                            return <Layout component={component} />
-                        }} />
-                    )
-                })}
-            </Switch>
-        </Router>
-    );
+  return (
+    <Router history={getHistory()}>
+      <Switch>
+        {router.map((item, index) => {
+          const { component, ...reset } = item;
+          return (
+            <Route key={index} {...reset} render={() => {
+              return <Layout component={component} />
+            }} />
+          )
+        })}
+      </Switch>
+    </Router>
+  );
 };
 
 export default App;
