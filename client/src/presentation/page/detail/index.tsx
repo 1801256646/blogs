@@ -6,6 +6,8 @@ import moment from 'moment';
 import React, { FC, useState, useEffect, useMemo } from 'react';
 import ReactMarkDown from 'react-markdown';
 import { useHistory, useParams } from 'react-router-dom';
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
+import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import Zmage from 'react-zmage';
 import { CommentType } from '@/application/enum/release';
 import { ReleaseStatus } from '@/application/enum/release';
@@ -150,12 +152,31 @@ const Detail: FC = () => {
                     avatar={<Avatar size={40} src={data?.data?.user?.avatar} icon={<UserOutlined />} />}
                     content={
                       <p>
-                                                发布于{moment(data?.data?.createTime).format('YYYY-MM-DD HH:mm:ss')}
+                        发布于{moment(data?.data?.createTime).format('YYYY-MM-DD HH:mm:ss')}
                       </p>
                     }
                   />
                   <Paragraph style={{ 'whiteSpace': 'pre-line' }} className={styles.content}>
-                    {data?.data?.content && <ReactMarkDown children={data?.data?.content || ''} />}
+                    {data?.data?.content && <ReactMarkDown
+                      children={data?.data?.content || ''}components={{
+                        code({node, inline, className, children, ...props}) {
+                          const match = /language-(\w+)/.exec(className || '')
+                          return !inline && match ? (
+                            <SyntaxHighlighter
+                              children={String(children).replace(/\n$/, '')}
+                              style={dracula}
+                              language={match[1]}
+                              PreTag="div"
+                              {...props}
+                            />
+                          ) : (
+                            <code className={className} {...props}>
+                              {children}
+                            </code>
+                          )
+                        }
+                      }}
+                    />}
                   </Paragraph>
                   <div className={styles.image}>
                     {data?.data?.img?.map((item, idx) => (

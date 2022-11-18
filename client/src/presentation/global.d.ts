@@ -16,6 +16,8 @@ declare module 'markdown-it-ins'
 declare module 'markdown-it-mark'
 declare module 'markdown-it-task-lists'
 declare module 'markdown-it-emoji'
+declare module 'react-syntax-highlighter'
+declare module 'react-syntax-highlighter/dist/esm/styles/prism'
 declare module '*.scss' {
     const content: any;
     export default content;
